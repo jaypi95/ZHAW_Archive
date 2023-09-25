@@ -1,0 +1,218 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SettlementPhase</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">ch.zhaw.catan</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SettlementPhase (ch.zhaw.catan)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SettlementPhase</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 53)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package ch.zhaw.catan;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.beryx.textio.IntInputReader;
+<i>4</i>&nbsp;import org.beryx.textio.TextIO;
+<i>5</i>&nbsp;import org.beryx.textio.TextTerminal;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.awt.Point;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class runs the settlement phase of a game
+<i>11</i>&nbsp; * Every Player can build their initial roads and settlements in an specific order
+<i>12</i>&nbsp; *
+<i>13</i>&nbsp; * @author baachsil
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class SettlementPhase {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    private final SiedlerGame siedlerGame;
+<i>18</i>&nbsp;    private final SiedlerBoardTextView boardPrinter;
+<i>19</i>&nbsp;    private final TextTerminal&lt;?&gt; textTerminal;
+<i>20</i>&nbsp;    private final IntInputReader intInputReader;
+<i>21</i>&nbsp;    private final int playerCount;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /**
+<i>24</i>&nbsp;     * Inits the settlement phase object
+<i>25</i>&nbsp;     *
+<i>26</i>&nbsp;     * @param siedlerGame siedlerGame object in which the game is running
+<i>27</i>&nbsp;     * @param playerCount how many players are playing the game
+<i>28</i>&nbsp;     * @param textIO      the textIO object to get an instance of the terminal
+<i>29</i>&nbsp;     */
+<b class="nc"><i>30</i>&nbsp;    public SettlementPhase(SiedlerGame siedlerGame, int playerCount, TextIO textIO) {</b>
+<b class="nc"><i>31</i>&nbsp;        this.siedlerGame = siedlerGame;</b>
+<b class="nc"><i>32</i>&nbsp;        this.playerCount = playerCount;</b>
+<i>33</i>&nbsp;
+<b class="nc"><i>34</i>&nbsp;        boardPrinter = siedlerGame.getBoard().getView();</b>
+<i>35</i>&nbsp;
+<b class="nc"><i>36</i>&nbsp;        textTerminal = textIO.getTextTerminal();</b>
+<b class="nc"><i>37</i>&nbsp;        intInputReader = textIO.newIntInputReader();</b>
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * This methods starts and runs the whole settlement phase
+<i>43</i>&nbsp;     */
+<i>44</i>&nbsp;    public void runSettlementPhase() {
+<i>45</i>&nbsp;        //Prints an empty gameBoard
+<b class="nc"><i>46</i>&nbsp;        textTerminal.println(&quot;Starting settlement phase...&quot;);</b>
+<b class="nc"><i>47</i>&nbsp;        boardPrinter.printGameBoard();</b>
+<i>48</i>&nbsp;
+<b class="nc"><i>49</i>&nbsp;        for (int firstRun = 1; firstRun &lt;= playerCount; firstRun++) {</b>
+<b class="nc"><i>50</i>&nbsp;            playerTurn(false);</b>
+<b class="nc"><i>51</i>&nbsp;            siedlerGame.switchToNextPlayer();</b>
+<i>52</i>&nbsp;        }
+<i>53</i>&nbsp;
+<b class="nc"><i>54</i>&nbsp;        siedlerGame.switchToPreviousPlayer();</b>
+<i>55</i>&nbsp;
+<b class="nc"><i>56</i>&nbsp;        for (int secondRun = playerCount; secondRun &gt;= 1; secondRun--) {</b>
+<b class="nc"><i>57</i>&nbsp;            playerTurn(true);</b>
+<b class="nc"><i>58</i>&nbsp;            siedlerGame.switchToPreviousPlayer();</b>
+<i>59</i>&nbsp;        }
+<i>60</i>&nbsp;
+<b class="nc"><i>61</i>&nbsp;        textTerminal.println(&quot;Settlement phase completed! Main game has started.&quot;);</b>
+<b class="nc"><i>62</i>&nbsp;    }</b>
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    /**
+<i>65</i>&nbsp;     * This method handles one player turn
+<i>66</i>&nbsp;     * A player can build one settlement and one road
+<i>67</i>&nbsp;     * If wished the player gets the payout
+<i>68</i>&nbsp;     *
+<i>69</i>&nbsp;     * @param payout Should the player get Resources when creating a settlement?
+<i>70</i>&nbsp;     */
+<i>71</i>&nbsp;    private void playerTurn(boolean payout) {
+<b class="nc"><i>72</i>&nbsp;        placeSettlement(payout);</b>
+<b class="nc"><i>73</i>&nbsp;        boardPrinter.printGameBoard();</b>
+<b class="nc"><i>74</i>&nbsp;        placeRoad();</b>
+<b class="nc"><i>75</i>&nbsp;        boardPrinter.printGameBoard();</b>
+<b class="nc"><i>76</i>&nbsp;    }</b>
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    /**
+<i>79</i>&nbsp;     * This method lets the player place a settlement
+<i>80</i>&nbsp;     *
+<i>81</i>&nbsp;     * @param payout Should the player get resources when creating a settlement?
+<i>82</i>&nbsp;     */
+<i>83</i>&nbsp;    private void placeSettlement(boolean payout) {
+<b class="nc"><i>84</i>&nbsp;        boolean validInput = false;</b>
+<i>85</i>&nbsp;
+<b class="nc"><i>86</i>&nbsp;        while (!validInput) {</b>
+<b class="nc"><i>87</i>&nbsp;            textTerminal.println(&quot;Player &quot; + siedlerGame.getCurrentPlayerFaction().name() + &quot; can build a settlement. Please enter the desired coordinates!&quot;);</b>
+<i>88</i>&nbsp;
+<b class="nc"><i>89</i>&nbsp;            textTerminal.println(&quot;X-Coordinate:&quot;);</b>
+<b class="nc"><i>90</i>&nbsp;            int xCoord = intInputReader.read();</b>
+<i>91</i>&nbsp;
+<b class="nc"><i>92</i>&nbsp;            textTerminal.println((&quot;Y-Coordinate:&quot;));</b>
+<b class="nc"><i>93</i>&nbsp;            int yCoord = intInputReader.read();</b>
+<i>94</i>&nbsp;
+<b class="nc"><i>95</i>&nbsp;            validInput = siedlerGame.placeInitialSettlement(new Point(xCoord, yCoord), payout);</b>
+<i>96</i>&nbsp;
+<b class="nc"><i>97</i>&nbsp;            if (!validInput) {</b>
+<b class="nc"><i>98</i>&nbsp;                textTerminal.println(&quot;Invalid parameters! Action aborted - try again&quot;);</b>
+<i>99</i>&nbsp;            } else {
+<b class="nc"><i>100</i>&nbsp;                textTerminal.println(&quot;Settlement founded successfully!&quot;);</b>
+<i>101</i>&nbsp;            }
+<b class="nc"><i>102</i>&nbsp;        }</b>
+<b class="nc"><i>103</i>&nbsp;    }</b>
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    /**
+<i>106</i>&nbsp;     * This method lets the player build a road
+<i>107</i>&nbsp;     */
+<i>108</i>&nbsp;    private void placeRoad() {
+<b class="nc"><i>109</i>&nbsp;        boolean validInput = false;</b>
+<i>110</i>&nbsp;
+<b class="nc"><i>111</i>&nbsp;        while (!validInput) {</b>
+<b class="nc"><i>112</i>&nbsp;            textTerminal.println(&quot;Player &quot; + siedlerGame.getCurrentPlayerFaction().name() + &quot; can build a road. Please enter the desired coordinates!&quot;);</b>
+<i>113</i>&nbsp;
+<b class="nc"><i>114</i>&nbsp;            textTerminal.println(&quot;Start X-Coordinate:&quot;);</b>
+<b class="nc"><i>115</i>&nbsp;            int xCoordStart = intInputReader.read();</b>
+<i>116</i>&nbsp;
+<b class="nc"><i>117</i>&nbsp;            textTerminal.println((&quot;Start Y-Coordinate:&quot;));</b>
+<b class="nc"><i>118</i>&nbsp;            int yCoordStart = intInputReader.read();</b>
+<i>119</i>&nbsp;
+<b class="nc"><i>120</i>&nbsp;            textTerminal.println(&quot;End X-Coordinate:&quot;);</b>
+<b class="nc"><i>121</i>&nbsp;            int xCoordEnd = intInputReader.read();</b>
+<i>122</i>&nbsp;
+<b class="nc"><i>123</i>&nbsp;            textTerminal.println((&quot;End Y-Coordinate:&quot;));</b>
+<b class="nc"><i>124</i>&nbsp;            int yCoordEnd = intInputReader.read();</b>
+<i>125</i>&nbsp;
+<b class="nc"><i>126</i>&nbsp;            validInput = siedlerGame.placeInitialRoad(new Point(xCoordStart, yCoordStart), new Point(xCoordEnd, yCoordEnd));</b>
+<i>127</i>&nbsp;
+<b class="nc"><i>128</i>&nbsp;            if (!validInput) {</b>
+<b class="nc"><i>129</i>&nbsp;                textTerminal.println(&quot;Invalid parameters! Action aborted - try again&quot;);</b>
+<i>130</i>&nbsp;            } else {
+<b class="nc"><i>131</i>&nbsp;                textTerminal.println(&quot;Road placed successfully!&quot;);</b>
+<i>132</i>&nbsp;            }
+<b class="nc"><i>133</i>&nbsp;        }</b>
+<b class="nc"><i>134</i>&nbsp;    }</b>
+<i>135</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-04 14:51</div>
+</div>
+</body>
+</html>

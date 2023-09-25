@@ -1,0 +1,456 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: HexBoardTextView</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">ch.zhaw.hexboard</a> ]
+</div>
+
+<h1>Coverage Summary for Class: HexBoardTextView (ch.zhaw.hexboard)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HexBoardTextView</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (2/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9%
+  </span>
+  <span class="absValue">
+    (11/ 122)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package ch.zhaw.hexboard;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.awt.Point;
+<i>4</i>&nbsp;import java.util.HashMap;
+<i>5</i>&nbsp;import java.util.Map;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * This class can be used to get a textual representation of a hex-grid modeled
+<i>9</i>&nbsp; * by {@link ch.zhaw.hexboard.HexBoard}.
+<i>10</i>&nbsp; * &lt;p&gt;
+<i>11</i>&nbsp; * It creates a textual representation of the {@link ch.zhaw.hexboard.HexBoard}
+<i>12</i>&nbsp; * that includes all defined fields, edges, corners and annotations.
+<i>13</i>&nbsp; * &lt;/p&gt;
+<i>14</i>&nbsp; * The generation of the textual representation is basically working on a line
+<i>15</i>&nbsp; * by line basis. Thereby, the two text lines needed for the diagonal edges are
+<i>16</i>&nbsp; * treated like &quot;one line&quot; in that they are created in one step together.
+<i>17</i>&nbsp; * &lt;p&gt;
+<i>18</i>&nbsp; * The textual representation does not contain the hex-grid as such but only the
+<i>19</i>&nbsp; * fields that actually exist on the hex-board. Note that if a field exists,
+<i>20</i>&nbsp; * also its corners and edges exist and are therefore shown in the textual
+<i>21</i>&nbsp; * representation.
+<i>22</i>&nbsp; * &lt;/p&gt;
+<i>23</i>&nbsp; * &lt;p&gt;
+<i>24</i>&nbsp; * This class defines how edges, corners and fields look like (their &quot;label&quot;).
+<i>25</i>&nbsp; * This is done as follows:
+<i>26</i>&nbsp; * &lt;ul&gt;
+<i>27</i>&nbsp; * &lt;li&gt;If there is no data object associated with an edge, corner or field,
+<i>28</i>&nbsp; * their default representation is used. Note that the default representation of
+<i>29</i>&nbsp; * an edge depends on its direction (see below).&lt;/li&gt;
+<i>30</i>&nbsp; * &lt;li&gt;If there is a data object associated with an edge, corner or field, the
+<i>31</i>&nbsp; * {@link ch.zhaw.hexboard.Label} is determined by calling:
+<i>32</i>&nbsp; * &lt;ul&gt;
+<i>33</i>&nbsp; * &lt;li&gt;EL = {@link #getEdgeLabel(Object)}&lt;/li&gt;
+<i>34</i>&nbsp; * &lt;li&gt;CL = {@link #getCornerLabel(Object)}&lt;/li&gt;
+<i>35</i>&nbsp; * &lt;li&gt;UL = {@link #getFieldLabelUpper(Object)}&lt;/li&gt;
+<i>36</i>&nbsp; * &lt;/ul&gt;
+<i>37</i>&nbsp; * &lt;/li&gt;
+<i>38</i>&nbsp; * &lt;/ul&gt;
+<i>39</i>&nbsp; * In addition to edges, corners and field labels, the hex-board&#39;s field
+<i>40</i>&nbsp; * annotations are included too. If an annotation exists for one of the corners
+<i>41</i>&nbsp; * (N, NW, SW, S, SE, NE), which means that an associated data object exists, it
+<i>42</i>&nbsp; * is turned into a {@link ch.zhaw.hexboard.Label} with
+<i>43</i>&nbsp; * {@link #getAnnotationLabel(Object)}.
+<i>44</i>&nbsp; * &lt;/p&gt;
+<i>45</i>&nbsp; * &lt;p&gt;
+<i>46</i>&nbsp; * Two examples of how that looks like are shown below. The first example shows
+<i>47</i>&nbsp; * a case with all edges, corners and the field with no data associated with
+<i>48</i>&nbsp; * them. The second one has all edges corner and the upper field label defined
+<i>49</i>&nbsp; * by calling the corresponding method for creating the Label for the associated
+<i>50</i>&nbsp; * data object.
+<i>51</i>&nbsp; *
+<i>52</i>&nbsp; * &lt;pre&gt;
+<i>53</i>&nbsp; *        DEFAULT                LABELS FROM DATA
+<i>54</i>&nbsp; *
+<i>55</i>&nbsp; *          (  )                       (CL)
+<i>56</i>&nbsp; *        //    \\                   EL    EL
+<i>57</i>&nbsp; *    //            \\           EL     N      EL
+<i>58</i>&nbsp; * (  )              (  )     (CL) NE        NW (CL)
+<i>59</i>&nbsp; *  ||                ||       EL       UL       EL
+<i>60</i>&nbsp; *  ||                ||       EL                EL
+<i>61</i>&nbsp; * (  )              (  )     (CL) SE        SW (CL)
+<i>62</i>&nbsp; *    \\            //           EL     S      EL
+<i>63</i>&nbsp; *        \\    //                   EL    EL
+<i>64</i>&nbsp; *          (  )                       (CL)
+<i>65</i>&nbsp; * &lt;/pre&gt;
+<i>66</i>&nbsp; * &lt;p&gt;
+<i>67</i>&nbsp; * To override the default behavior, which creates a Label using the two first
+<i>68</i>&nbsp; * characters of the string returned by the toString() method of the
+<i>69</i>&nbsp; * edge/corner/field data object, you might override the respective methods.
+<i>70</i>&nbsp; * &lt;/p&gt;
+<i>71</i>&nbsp; * &lt;p&gt;
+<i>72</i>&nbsp; * Finally, a field can be labeled with a lower label (LL) by providing a map of
+<i>73</i>&nbsp; * field coordinates and associated labels. An example of a representation with
+<i>74</i>&nbsp; * all field annotations, corner labels and field labels defined but default
+<i>75</i>&nbsp; * edges is the following:
+<i>76</i>&nbsp; *
+<i>77</i>&nbsp; * &lt;pre&gt;
+<i>78</i>&nbsp; *          (CL)
+<i>79</i>&nbsp; *        // N  \\
+<i>80</i>&nbsp; *    //            \\
+<i>81</i>&nbsp; * (CL) NE        NW (CL)
+<i>82</i>&nbsp; *  ||       UL       ||
+<i>83</i>&nbsp; *  ||       LL       ||
+<i>84</i>&nbsp; * (CL) SE        SW (CL)
+<i>85</i>&nbsp; *    \\     S      //
+<i>86</i>&nbsp; *        \\    //
+<i>87</i>&nbsp; *          (CL)
+<i>88</i>&nbsp; * &lt;/pre&gt;
+<i>89</i>&nbsp; * &lt;/p&gt;
+<i>90</i>&nbsp; *
+<i>91</i>&nbsp; * @param &lt;F&gt; See {@link ch.zhaw.hexboard.HexBoard}
+<i>92</i>&nbsp; * @param &lt;C&gt; See {@link ch.zhaw.hexboard.HexBoard}
+<i>93</i>&nbsp; * @param &lt;E&gt; See {@link ch.zhaw.hexboard.HexBoard}
+<i>94</i>&nbsp; * @param &lt;A&gt; See {@link ch.zhaw.hexboard.HexBoard}
+<i>95</i>&nbsp; * @author tebe
+<i>96</i>&nbsp; */
+<i>97</i>&nbsp;public class HexBoardTextView&lt;F, C, E, A&gt; {
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    private static final String ONE_SPACE = &quot; &quot;;
+<i>100</i>&nbsp;    private static final String THREE_SPACES = &quot;   &quot;;
+<i>101</i>&nbsp;    private static final String FOUR_SPACES = &quot;    &quot;;
+<i>102</i>&nbsp;    private static final String SIX_SPACES = &quot;      &quot;;
+<i>103</i>&nbsp;    private static final String SEVEN_SPACES = &quot;       &quot;;
+<i>104</i>&nbsp;    private static final String EIGHT_SPACES = &quot;        &quot;;
+<i>105</i>&nbsp;    private static final String NINE_SPACES = &quot;         &quot;;
+<i>106</i>&nbsp;    private final HexBoard&lt;F, C, E, A&gt; board;
+<b class="fc"><i>107</i>&nbsp;    private final Label emptyLabel = new Label(&#39; &#39;, &#39; &#39;);</b>
+<b class="fc"><i>108</i>&nbsp;    private final Label defaultDiagonalEdgeDownLabel = new Label(&#39;\\&#39;, &#39;\\&#39;);</b>
+<b class="fc"><i>109</i>&nbsp;    private final Label defaultDiagonalEdgeUpLabel = new Label(&#39;/&#39;, &#39;/&#39;);</b>
+<b class="fc"><i>110</i>&nbsp;    private final Label defaultVerticalEdgeLabel = new Label(&#39;|&#39;, &#39;|&#39;);</b>
+<i>111</i>&nbsp;    private Map&lt;Point, Label&gt; fixedLowerFieldLabels;
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;    /**
+<i>114</i>&nbsp;     * Creates a view for the specified board.
+<i>115</i>&nbsp;     *
+<i>116</i>&nbsp;     * @param board the board
+<i>117</i>&nbsp;     */
+<b class="fc"><i>118</i>&nbsp;    public HexBoardTextView(HexBoard&lt;F, C, E, A&gt; board) {</b>
+<b class="fc"><i>119</i>&nbsp;        this.fixedLowerFieldLabels = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>120</i>&nbsp;        this.board = board;</b>
+<b class="fc"><i>121</i>&nbsp;    }</b>
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    /**
+<i>124</i>&nbsp;     * Sets the lower field label for the specified field.
+<i>125</i>&nbsp;     *
+<i>126</i>&nbsp;     * @param field the field
+<i>127</i>&nbsp;     * @param label the label
+<i>128</i>&nbsp;     * @throws IllegalArgumentException if arguments are null or if the field does
+<i>129</i>&nbsp;     *                                  not exist
+<i>130</i>&nbsp;     */
+<i>131</i>&nbsp;    public void setLowerFieldLabel(Point field, Label label) {
+<b class="fc"><i>132</i>&nbsp;        if (field == null || label == null || !board.hasField(field)) {</b>
+<b class="nc"><i>133</i>&nbsp;            throw new IllegalArgumentException(&quot;Argument(s) must not be null and field must exist.&quot;);</b>
+<i>134</i>&nbsp;        }
+<b class="fc"><i>135</i>&nbsp;        fixedLowerFieldLabels.put(field, label);</b>
+<b class="fc"><i>136</i>&nbsp;    }</b>
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;    /**
+<i>139</i>&nbsp;     * Returns a label to be used as label for the edge. This method is called to
+<i>140</i>&nbsp;     * determine the label for this edge.
+<i>141</i>&nbsp;     *
+<i>142</i>&nbsp;     * @param e edge data object
+<i>143</i>&nbsp;     * @return the label
+<i>144</i>&nbsp;     */
+<i>145</i>&nbsp;    protected Label getEdgeLabel(E e) {
+<b class="nc"><i>146</i>&nbsp;        return deriveLabelFromToStringRepresentation(e);</b>
+<i>147</i>&nbsp;    }
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;    /**
+<i>150</i>&nbsp;     * Returns a label to be used as label for the corner. This method is called to
+<i>151</i>&nbsp;     * determine the label for this corner.
+<i>152</i>&nbsp;     *
+<i>153</i>&nbsp;     * @param c corner data object
+<i>154</i>&nbsp;     * @return the label
+<i>155</i>&nbsp;     */
+<i>156</i>&nbsp;    protected Label getCornerLabel(C c) {
+<b class="nc"><i>157</i>&nbsp;        return deriveLabelFromToStringRepresentation(c);</b>
+<i>158</i>&nbsp;    }
+<i>159</i>&nbsp;
+<i>160</i>&nbsp;    /**
+<i>161</i>&nbsp;     * Returns a label to be used as upper label for the field. This method is
+<i>162</i>&nbsp;     * called to determine the upper label for this field.
+<i>163</i>&nbsp;     *
+<i>164</i>&nbsp;     * @param f field data object
+<i>165</i>&nbsp;     * @return the label
+<i>166</i>&nbsp;     */
+<i>167</i>&nbsp;    protected Label getFieldLabelUpper(F f) {
+<b class="nc"><i>168</i>&nbsp;        return deriveLabelFromToStringRepresentation(f);</b>
+<i>169</i>&nbsp;    }
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;    /**
+<i>172</i>&nbsp;     * Returns a label to be used as lower label for the field at this position.
+<i>173</i>&nbsp;     * This method is called to determine the lower label for this field.
+<i>174</i>&nbsp;     *
+<i>175</i>&nbsp;     * @param p location of the field
+<i>176</i>&nbsp;     * @return the label
+<i>177</i>&nbsp;     */
+<i>178</i>&nbsp;    private Label getFieldLabelLower(Point p) {
+<b class="nc"><i>179</i>&nbsp;        Label l = this.fixedLowerFieldLabels.get(p);</b>
+<b class="nc"><i>180</i>&nbsp;        l = l == null ? emptyLabel : l;</b>
+<b class="nc"><i>181</i>&nbsp;        return l;</b>
+<i>182</i>&nbsp;    }
+<i>183</i>&nbsp;
+<i>184</i>&nbsp;    private Label deriveLabelFromToStringRepresentation(Object o) {
+<b class="nc"><i>185</i>&nbsp;        Label label = emptyLabel;</b>
+<b class="nc"><i>186</i>&nbsp;        if (o.toString().length() &gt; 0) {</b>
+<b class="nc"><i>187</i>&nbsp;            String s = o.toString();</b>
+<b class="nc"><i>188</i>&nbsp;            if (s.length() &gt; 1) {</b>
+<b class="nc"><i>189</i>&nbsp;                return new Label(s.charAt(0), s.charAt(1));</b>
+<i>190</i>&nbsp;            } else {
+<b class="nc"><i>191</i>&nbsp;                return new Label(s.charAt(0), &#39; &#39;);</b>
+<i>192</i>&nbsp;            }
+<i>193</i>&nbsp;        }
+<b class="nc"><i>194</i>&nbsp;        return label;</b>
+<i>195</i>&nbsp;    }
+<i>196</i>&nbsp;
+<i>197</i>&nbsp;    /**
+<i>198</i>&nbsp;     * &lt;p&gt;
+<i>199</i>&nbsp;     * This method returns a single-line string with all corners and field
+<i>200</i>&nbsp;     * annotations for a given y-coordinate. It produces the string by iterating
+<i>201</i>&nbsp;     * over corner positions and appending per corner:
+<i>202</i>&nbsp;     * &lt;/p&gt;
+<i>203</i>&nbsp;     * &lt;p&gt;
+<i>204</i>&nbsp;     * &quot;(CL) NE NW &quot; for y%3==1 &quot;(CL) SE SW &quot; for y%3==0
+<i>205</i>&nbsp;     * &lt;/p&gt;
+<i>206</i>&nbsp;     * &lt;p&gt;
+<i>207</i>&nbsp;     * Corners/labels that do not exist are replaced by spaces.
+<i>208</i>&nbsp;     * &lt;/p&gt;
+<i>209</i>&nbsp;     */
+<i>210</i>&nbsp;    private String printCornerLine(int y) {
+<b class="nc"><i>211</i>&nbsp;        StringBuilder cornerLine = new StringBuilder(&quot;&quot;);</b>
+<b class="nc"><i>212</i>&nbsp;        int offset = 0;</b>
+<b class="nc"><i>213</i>&nbsp;        if (y % 2 != 0) {</b>
+<b class="nc"><i>214</i>&nbsp;            cornerLine.append(NINE_SPACES);</b>
+<b class="nc"><i>215</i>&nbsp;            offset = 1;</b>
+<i>216</i>&nbsp;        }
+<b class="nc"><i>217</i>&nbsp;        for (int x = offset; x &lt;= board.getMaxCoordinateX(); x = x + 2) {</b>
+<b class="nc"><i>218</i>&nbsp;            Point p = new Point(x, y);</b>
+<i>219</i>&nbsp;            Label cornerLabel;
+<i>220</i>&nbsp;
+<i>221</i>&nbsp;            // handle corner labels for corners other than north and south corners
+<i>222</i>&nbsp;            Point center;
+<b class="nc"><i>223</i>&nbsp;            Label first = null;</b>
+<b class="nc"><i>224</i>&nbsp;            Label second = null;</b>
+<b class="nc"><i>225</i>&nbsp;            switch (y % 3) {</b>
+<i>226</i>&nbsp;                case 0:
+<b class="nc"><i>227</i>&nbsp;                    center = new Point(x + 1, y - 1);</b>
+<b class="nc"><i>228</i>&nbsp;                    first = this.getAnnotationLabel(</b>
+<b class="nc"><i>229</i>&nbsp;                            board.getFieldAnnotation(center, new Point(center.x - 1, center.y + 1)));</b>
+<b class="nc"><i>230</i>&nbsp;                    second = this.getAnnotationLabel(</b>
+<b class="nc"><i>231</i>&nbsp;                            board.getFieldAnnotation(center, new Point(center.x + 1, center.y + 1)));</b>
+<b class="nc"><i>232</i>&nbsp;                    break;</b>
+<i>233</i>&nbsp;                case 1:
+<b class="nc"><i>234</i>&nbsp;                    center = new Point(x + 1, y + 1);</b>
+<b class="nc"><i>235</i>&nbsp;                    first = this.getAnnotationLabel(</b>
+<b class="nc"><i>236</i>&nbsp;                            board.getFieldAnnotation(center, new Point(center.x - 1, center.y - 1)));</b>
+<b class="nc"><i>237</i>&nbsp;                    second = this.getAnnotationLabel(</b>
+<b class="nc"><i>238</i>&nbsp;                            board.getFieldAnnotation(center, new Point(center.x + 1, center.y - 1)));</b>
+<b class="nc"><i>239</i>&nbsp;                    break;</b>
+<i>240</i>&nbsp;                default:
+<b class="nc"><i>241</i>&nbsp;                    throw new IllegalArgumentException(&quot;Not a corner line&quot;);</b>
+<i>242</i>&nbsp;            }
+<i>243</i>&nbsp;
+<b class="nc"><i>244</i>&nbsp;            if (board.hasCorner(p)) {</b>
+<b class="nc"><i>245</i>&nbsp;                cornerLabel = board.getCorner(p) != null ? getCornerLabel(board.getCorner(p)) : emptyLabel;</b>
+<b class="nc"><i>246</i>&nbsp;                cornerLine.append(&quot;(&quot;).append(cornerLabel.getFirst()).append(cornerLabel.getSecond()).append(&quot;)&quot;);</b>
+<i>247</i>&nbsp;            } else {
+<b class="nc"><i>248</i>&nbsp;                cornerLine.append(FOUR_SPACES);</b>
+<i>249</i>&nbsp;            }
+<b class="nc"><i>250</i>&nbsp;            cornerLine.append(ONE_SPACE).append(first.getFirst()).append(first.getSecond());</b>
+<b class="nc"><i>251</i>&nbsp;            cornerLine.append(EIGHT_SPACES).append(second.getFirst()).append(second.getSecond()).append(ONE_SPACE);</b>
+<i>252</i>&nbsp;        }
+<b class="nc"><i>253</i>&nbsp;        return cornerLine.toString();</b>
+<i>254</i>&nbsp;    }
+<i>255</i>&nbsp;
+<i>256</i>&nbsp;    private Label getAnnotationLabel(A annotation) {
+<b class="nc"><i>257</i>&nbsp;        if (annotation == null) {</b>
+<b class="nc"><i>258</i>&nbsp;            return emptyLabel;</b>
+<i>259</i>&nbsp;        } else {
+<b class="nc"><i>260</i>&nbsp;            return deriveLabelFromToStringRepresentation(annotation);</b>
+<i>261</i>&nbsp;        }
+<i>262</i>&nbsp;    }
+<i>263</i>&nbsp;
+<i>264</i>&nbsp;    private String printMiddlePartOfField(int y) {
+<b class="nc"><i>265</i>&nbsp;        boolean isOffsetRow = (y - 2) % 6 == 0;</b>
+<b class="nc"><i>266</i>&nbsp;        StringBuilder lower = new StringBuilder(isOffsetRow ? NINE_SPACES : &quot;&quot;);</b>
+<b class="nc"><i>267</i>&nbsp;        StringBuilder upper = new StringBuilder(isOffsetRow ? NINE_SPACES : &quot;&quot;);</b>
+<b class="nc"><i>268</i>&nbsp;        int xstart = isOffsetRow ? 2 : 1;</b>
+<i>269</i>&nbsp;
+<b class="nc"><i>270</i>&nbsp;        for (int x = xstart; x &lt;= board.getMaxCoordinateX() + 1; x = x + 2) {</b>
+<b class="nc"><i>271</i>&nbsp;            Point edgeStart = new Point(x - 1, y - 1);</b>
+<b class="nc"><i>272</i>&nbsp;            Point edgeEnd = new Point(x - 1, y + 1);</b>
+<b class="nc"><i>273</i>&nbsp;            Label l = this.emptyLabel;</b>
+<b class="nc"><i>274</i>&nbsp;            if (board.hasEdge(edgeStart, edgeEnd)) {</b>
+<b class="nc"><i>275</i>&nbsp;                E edge = board.getEdge(edgeStart, edgeEnd);</b>
+<b class="nc"><i>276</i>&nbsp;                if (edge != null) {</b>
+<b class="nc"><i>277</i>&nbsp;                    l = this.getEdgeLabel(edge);</b>
+<i>278</i>&nbsp;                } else {
+<b class="nc"><i>279</i>&nbsp;                    l = this.defaultVerticalEdgeLabel;</b>
+<i>280</i>&nbsp;                }
+<i>281</i>&nbsp;            }
+<b class="nc"><i>282</i>&nbsp;            Point center = new Point(x, y);</b>
+<b class="nc"><i>283</i>&nbsp;            boolean hasFieldWithData = board.hasField(center) &amp;&amp; board.getField(center) != null;</b>
+<b class="nc"><i>284</i>&nbsp;            Label lowerFieldLabel = hasFieldWithData ? getFieldLabelLower(center) : emptyLabel;</b>
+<b class="nc"><i>285</i>&nbsp;            Label upperFieldLabel = hasFieldWithData ? getFieldLabelUpper(board.getField(center))</b>
+<b class="nc"><i>286</i>&nbsp;                    : emptyLabel;</b>
+<b class="nc"><i>287</i>&nbsp;            lower.append(ONE_SPACE).append(l.getFirst()).append(l.getSecond()).append(SEVEN_SPACES);</b>
+<b class="nc"><i>288</i>&nbsp;            lower.append(lowerFieldLabel.getFirst()).append(lowerFieldLabel.getSecond()).append(SIX_SPACES);</b>
+<i>289</i>&nbsp;
+<b class="nc"><i>290</i>&nbsp;            upper.append(ONE_SPACE).append(l.getFirst()).append(l.getSecond()).append(SEVEN_SPACES);</b>
+<b class="nc"><i>291</i>&nbsp;            upper.append(upperFieldLabel.getFirst()).append(upperFieldLabel.getSecond()).append(SIX_SPACES);</b>
+<i>292</i>&nbsp;        }
+<b class="nc"><i>293</i>&nbsp;        return upper + System.lineSeparator() + lower;</b>
+<i>294</i>&nbsp;    }
+<i>295</i>&nbsp;
+<i>296</i>&nbsp;    private void printDiagonalEdge(StringBuilder upper, StringBuilder lower, boolean down, Label l,
+<i>297</i>&nbsp;                                   Label annotationLabel) {
+<b class="nc"><i>298</i>&nbsp;        if (down) {</b>
+<b class="nc"><i>299</i>&nbsp;            upper.append(ONE_SPACE + l.getFirst() + l.getSecond() + &quot;     &quot; + annotationLabel.getFirst());</b>
+<b class="nc"><i>300</i>&nbsp;            lower.append(FOUR_SPACES + l.getFirst() + l.getSecond() + &quot;  &quot; + annotationLabel.getSecond());</b>
+<i>301</i>&nbsp;        } else {
+<b class="nc"><i>302</i>&nbsp;            upper.append(FOUR_SPACES + l.getFirst() + l.getSecond() + &quot;  &quot; + annotationLabel.getFirst());</b>
+<b class="nc"><i>303</i>&nbsp;            lower.append(ONE_SPACE + l.getFirst() + l.getSecond() + &quot;     &quot; + annotationLabel.getSecond());</b>
+<i>304</i>&nbsp;        }
+<b class="nc"><i>305</i>&nbsp;    }</b>
+<i>306</i>&nbsp;
+<i>307</i>&nbsp;    private String printDiagonalEdges(int y) {
+<b class="nc"><i>308</i>&nbsp;        StringBuilder sbUpper = new StringBuilder();</b>
+<b class="nc"><i>309</i>&nbsp;        StringBuilder sbLower = new StringBuilder();</b>
+<i>310</i>&nbsp;        Point edgeStart;
+<i>311</i>&nbsp;        Point edgeEnd;
+<b class="nc"><i>312</i>&nbsp;        A annotation = null;</b>
+<i>313</i>&nbsp;        Label l;
+<b class="nc"><i>314</i>&nbsp;        boolean isDown = y % 6 == 0;</b>
+<i>315</i>&nbsp;
+<b class="nc"><i>316</i>&nbsp;        sbUpper.append(THREE_SPACES);</b>
+<b class="nc"><i>317</i>&nbsp;        sbLower.append(THREE_SPACES);</b>
+<b class="nc"><i>318</i>&nbsp;        for (int x = 0; x &lt;= board.getMaxCoordinateX(); x = x + 1) {</b>
+<b class="nc"><i>319</i>&nbsp;            if (isDown) {</b>
+<b class="nc"><i>320</i>&nbsp;                edgeStart = new Point(x, y);</b>
+<b class="nc"><i>321</i>&nbsp;                edgeEnd = new Point(x + 1, y + 1);</b>
+<b class="nc"><i>322</i>&nbsp;                annotation = board.getFieldAnnotation(new Point(x + 1, y - 1), new Point(x + 1, y + 1));</b>
+<i>323</i>&nbsp;            } else {
+<b class="nc"><i>324</i>&nbsp;                edgeStart = new Point(x, y + 1);</b>
+<b class="nc"><i>325</i>&nbsp;                edgeEnd = new Point(x + 1, y);</b>
+<b class="nc"><i>326</i>&nbsp;                annotation = board.getFieldAnnotation(new Point(x + 1, y + 2), new Point(x + 1, y));</b>
+<i>327</i>&nbsp;            }
+<b class="nc"><i>328</i>&nbsp;            l = determineEdgeLabel(isDown, edgeStart, edgeEnd);</b>
+<b class="nc"><i>329</i>&nbsp;            this.printDiagonalEdge(sbUpper, sbLower, isDown, l, this.getAnnotationLabel(annotation));</b>
+<b class="nc"><i>330</i>&nbsp;            isDown = !isDown;</b>
+<i>331</i>&nbsp;        }
+<b class="nc"><i>332</i>&nbsp;        return sbUpper.toString() + System.lineSeparator() + sbLower.toString();</b>
+<i>333</i>&nbsp;    }
+<i>334</i>&nbsp;
+<i>335</i>&nbsp;    private Label determineEdgeLabel(boolean isDown, Point edgeStart, Point edgeEnd) {
+<i>336</i>&nbsp;        Label l;
+<b class="nc"><i>337</i>&nbsp;        if (board.hasEdge(edgeStart, edgeEnd)) {</b>
+<i>338</i>&nbsp;            // does it have data associated with it?
+<b class="nc"><i>339</i>&nbsp;            if (board.getEdge(edgeStart, edgeEnd) != null) {</b>
+<b class="nc"><i>340</i>&nbsp;                l = this.getEdgeLabel(board.getEdge(edgeStart, edgeEnd));</b>
+<i>341</i>&nbsp;            } else {
+<i>342</i>&nbsp;                // default visualization
+<b class="nc"><i>343</i>&nbsp;                l = isDown ? this.defaultDiagonalEdgeDownLabel : this.defaultDiagonalEdgeUpLabel;</b>
+<i>344</i>&nbsp;            }
+<i>345</i>&nbsp;        } else {
+<b class="nc"><i>346</i>&nbsp;            l = this.emptyLabel;</b>
+<i>347</i>&nbsp;        }
+<b class="nc"><i>348</i>&nbsp;        return l;</b>
+<i>349</i>&nbsp;    }
+<i>350</i>&nbsp;
+<i>351</i>&nbsp;    /*
+<i>352</i>&nbsp;     * (non-Javadoc)
+<i>353</i>&nbsp;     *
+<i>354</i>&nbsp;     * @see java.lang.Object#toString()
+<i>355</i>&nbsp;     */
+<i>356</i>&nbsp;    @Override
+<i>357</i>&nbsp;    public String toString() {
+<b class="nc"><i>358</i>&nbsp;        StringBuilder sb = new StringBuilder();</b>
+<b class="nc"><i>359</i>&nbsp;        for (int y = 0; y &lt;= board.getMaxCoordinateY(); y = y + 3) {</b>
+<b class="nc"><i>360</i>&nbsp;            sb.append(printCornerLine(y));</b>
+<b class="nc"><i>361</i>&nbsp;            sb.append(System.lineSeparator());</b>
+<b class="nc"><i>362</i>&nbsp;            sb.append(printDiagonalEdges(y));</b>
+<b class="nc"><i>363</i>&nbsp;            sb.append(System.lineSeparator());</b>
+<b class="nc"><i>364</i>&nbsp;            sb.append(printCornerLine(y + 1));</b>
+<b class="nc"><i>365</i>&nbsp;            sb.append(System.lineSeparator());</b>
+<b class="nc"><i>366</i>&nbsp;            sb.append(printMiddlePartOfField(y + 2));</b>
+<b class="nc"><i>367</i>&nbsp;            sb.append(System.lineSeparator());</b>
+<i>368</i>&nbsp;
+<i>369</i>&nbsp;        }
+<b class="nc"><i>370</i>&nbsp;        return sb.toString();</b>
+<i>371</i>&nbsp;    }
+<i>372</i>&nbsp;
+<i>373</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-04 14:51</div>
+</div>
+</body>
+</html>

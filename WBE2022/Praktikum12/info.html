@@ -1,0 +1,203 @@
+
+<html>
+<head>
+    <title>Praktikum 12 Aufgabe 1</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+    <script src="https://github.zhaw.ch/pages/kunpas01/wbe-2021/log.js"></script>
+</head>
+<body>
+<h1>Praktikum 12 Aufgabe 1</h1>
+<ol>
+    <li>Projekt Klonen / Ordner herunterladen</li>
+    <li>Server <a class= "noDeco" href="https://github.zhaw.ch/kunpas01/wbe-2021/tree/master/praktikum_12/code">(praktikum_12/code/index.js)</a> im CMD über "node index.js" starten</li>
+    <li><a href="http://localhost:3000/connect4.html">Hier</a> klicken, um auf die Anwendung zu kommen</li>
+</ol>
+<h2>Nachträglich das JavaScript Code-snipped</h2>
+<pre><code class="language-javascript">
+import { connect4Winner } from '/connect4Winner.js'
+import { render } from './lib/suiweb.js'
+
+const playerBlue = { name: 'blue', discSymbol: 'b' }
+const playerRed = { name: 'red', discSymbol: 'r' }
+let state = {
+    board: [
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '']
+    ],
+    currentPlayer: ""
+}
+let mainVM
+let Field
+const SERVICE = "http://localhost:3000/api/data/c4state?api-key=c4game"
+
+function setup() {
+    state.currentPlayer = playerRed.name
+    let MainVM = () => [boardVM, { board: state.board }]
+    let boardVM = ({ board }) => {
+        let flatBoard = [].concat(...board)
+        let fields = flatBoard.map((type) => [Field, { type }])
+        return (["div", { className: "board" }, ...fields])
+    }
+
+    Field = ({ type }) => {
+        let color = { r: 'red', b: 'blue' }[type]
+        let piece = color ? ["div", { className: "piece " + color }] : ""
+        return (
+            ["div", { className: "field" }, piece]
+        )
+    }
+
+    mainVM = document.querySelector(".main")
+    render([MainVM], mainVM)
+    addClickListenerToFields()
+}
+
+function endMove() {
+    if (!connect4Winner(state.board)) {
+        switchPlayer()
+    }
+    else {
+        alert("Player " + state.currentPlayer + " won!")
+        resetGame()
+    }
+}
+
+function createDisc(field, currentPlayer) {
+    render(["div", { className: "piece " + currentPlayer }],field)
+}
+
+function setDiscs(field, row, column) {
+    let value = state.board[row][column]
+    switch (value) {
+        case playerBlue.discSymbol:
+            createDisc(field, playerBlue.name)
+            break
+        case playerRed.discSymbol:
+            createDisc(field, playerRed.name)
+            break
+        default:
+            break
+    }
+}
+
+function addClickListenerToFields() {
+    document.querySelectorAll("div.field").forEach(field => {
+        field.addEventListener('click', () => {
+            makeMove(field)
+        })
+    })
+}
+
+function resetGame() {
+    for (let i = 0; i < state.board.length; i++) {
+        for (let j = 0; j < state.board[i].length; j++) {
+            state.board[i][j] = ''
+        }
+    }
+
+    resetAllFields()
+
+    state.currentPlayer = playerRed.name
+}
+
+function resetAllFields() {
+    document.querySelectorAll("div.field").forEach(field => {
+        while (field.firstChild) {
+            field.removeChild(field.lastChild)
+        }
+        setup()
+    })
+}
+
+function makeMove(field) {
+    if (field.childNodes[0].nodeValue == '') {
+        let allFields = Array.from(mainVM.firstChild.children)
+        let numberOfField = allFields.findIndex(node => node === field)
+        const rowIndex = numberOfField % state.board[0].length
+        if (state.currentPlayer == playerBlue.name) {
+            putDiscOnLowestLevel(playerBlue.name, rowIndex)
+        }
+        else {
+            putDiscOnLowestLevel(playerRed.name, rowIndex)
+        }
+        endMove()
+    }
+}
+
+function putDiscOnLowestLevel(currentPlayer, rowIndex) {
+    let discPlaced = false
+    for (let i = state.board.length - 1; i >= 0; i--) {
+        if (!discPlaced && state.board[i][rowIndex] == '') {
+            let index = rowIndex + (state.board[0].length * i)
+            let lowestFreeField = document.querySelectorAll("div.field")[index]
+            //remove empty ('') child
+            lowestFreeField.removeChild(lowestFreeField.childNodes[0])
+            state.board[i][rowIndex] = currentPlayer == playerRed.name ? playerRed.discSymbol : playerBlue.discSymbol
+            setDiscs(lowestFreeField, i, rowIndex)
+            discPlaced = true
+        }
+    }
+}
+
+function switchPlayer() {
+    if (state.currentPlayer == playerRed.name) {
+        state.currentPlayer = playerBlue.name
+    } else {
+        state.currentPlayer = playerRed.name
+    }
+}
+
+//  Get current state from server and re-draw board
+//
+async function loadState() {
+    resetGame()
+    await fetch(SERVICE)
+        .then(response => response.json())
+        .then(data => { state = data })
+    redrawBoard()
+}
+
+function redrawBoard() {
+    for (var i = 0; i < state.board.length; i++) {
+        for (var j = 0; j < state.board[i].length; j++) {
+            if (state.board[i][j] !== '') {
+                let index = j + (state.board[0].length * i)
+                let field = document.querySelectorAll("div.field")[index]
+                setDiscs(field, i, j)
+            }
+        }
+    }
+}
+
+//  Put current state to server
+//
+function saveState() {
+    fetch(SERVICE, {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(state)
+    })
+}
+
+setup()
+
+window.onload = function () {
+    let loadButton = document.getElementById("loadButton");
+    loadButton.onclick = loadState;
+    let saveButton = document.getElementById("saveButton");
+    saveButton.onclick = saveState;
+    let resetButton = document.getElementById("resetButton");
+    resetButton.onclick = resetGame;
+}
+	</code></pre>
+<script>hljs.highlightAll()</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Settlement</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">ch.zhaw.catan.structures</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Settlement (ch.zhaw.catan.structures)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Settlement</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package ch.zhaw.catan.structures;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import ch.zhaw.catan.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.awt.Point;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * This class represents the structure Settlement
+<i>9</i>&nbsp; *
+<i>10</i>&nbsp; * @author Silvan
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public class Settlement extends Building {
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**
+<i>15</i>&nbsp;     * Creates a settlement object
+<i>16</i>&nbsp;     *
+<i>17</i>&nbsp;     * @param siedlerGame object
+<i>18</i>&nbsp;     * @param bank        object
+<i>19</i>&nbsp;     */
+<i>20</i>&nbsp;    public Settlement(SiedlerGame siedlerGame, Bank bank) {
+<b class="fc"><i>21</i>&nbsp;        super(siedlerGame, bank);</b>
+<b class="fc"><i>22</i>&nbsp;    }</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * This methods builds a settlement at a specific location
+<i>26</i>&nbsp;     *
+<i>27</i>&nbsp;     * @param position on which the settlement should be built
+<i>28</i>&nbsp;     * @param player   which builds the settlement
+<i>29</i>&nbsp;     * @param payout   should the player get resources (just for the SettlementPhase)
+<i>30</i>&nbsp;     * @param isFree   is this building free to build?
+<i>31</i>&nbsp;     * @return if the action was successful
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    public boolean buildSettlement(Point position, Player player, boolean payout, boolean isFree) {
+<b class="fc"><i>34</i>&nbsp;        boolean builtSettlement = buildBuilding(position, player, Config.Structure.SETTLEMENT, isFree);</b>
+<i>35</i>&nbsp;
+<b class="fc"><i>36</i>&nbsp;        if (payout) {</b>
+<b class="fc"><i>37</i>&nbsp;            payOutPlayer(player);</b>
+<i>38</i>&nbsp;        }
+<i>39</i>&nbsp;
+<b class="fc"><i>40</i>&nbsp;        return builtSettlement;</b>
+<i>41</i>&nbsp;    }
+<i>42</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-04 14:51</div>
+</div>
+</body>
+</html>

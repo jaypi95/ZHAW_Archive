@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vier gewinnt</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+
+        /*
+         *  This solution sould be considered as a proof of concept – the code
+         *  definitely needs some cleanup and documentation
+         */
+
+        let state = {
+            board: [
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '']
+            ],
+            next: 'b'
+        }
+
+        const SERVICE = "http://localhost:3000/api/data/c4state?api-key=c4game"
+
+
+        //  Initialize game
+        //
+        function initGame() {
+            let board = showBoard()
+            attachEventHandler(board)
+        }
+
+
+        //  Show board
+        //
+        function showBoard() {
+            let board = document.querySelector(".board")
+            while (board.firstChild) { board.removeChild(board.firstChild) }
+            for (let i = 0; i < 42; i++) {
+                board.appendChild(elt("div", { "class": "field" }, ...getPiece(i)))
+            }
+            return board
+        }
+
+        function getPiece(n) {
+            let code = state.board[Math.floor(n / 7)][n % 7]
+            switch (code) {
+                case 'r': return [elt("div", { "class": "piece red" })]
+                case 'b': return [elt("div", { "class": "piece blue" })]
+                default: return []
+            }
+        }
+
+        function elt(type, attrs, ...children) {
+            let node = document.createElement(type)
+            for (a in attrs) {
+                node.setAttribute(a, attrs[a])
+            }
+            for (let child of children) {
+                if (typeof child != "string") node.appendChild(child)
+                else node.appendChild(document.createTextNode(child))
+            }
+            return node
+        }
+
+
+        //  Attach event handler to board
+        //
+        function attachEventHandler(board) {
+            board.addEventListener("click", (e) => {
+
+                // find clicked field
+                let field = e.target
+                if (field.classList.contains("piece")) field = field.parentNode
+                let allFields = Array.from(board.children)
+                let n = allFields.findIndex(node => node === field)
+
+                // find next free field in column
+                let nextfree = state.board.map(row => row[n % 7]).findIndex(f => f !== "")
+                nextfree = (nextfree === -1) ? 5 : nextfree - 1
+
+                // place piece
+                if (nextfree >= 0) {
+                    state.board[nextfree][n % 7] = state.next
+                }
+                showBoard()
+
+                if (connect4winner(state.board, state.next)) {
+                    alert(`Player with color ${state.next} won!`)
+                    console.log(JSON.stringify(state.board))
+
+                    state = {
+                        board: [
+                            ['', '', '', '', '', '', ''],
+                            ['', '', '', '', '', '', ''],
+                            ['', '', '', '', '', '', ''],
+                            ['', '', '', '', '', '', ''],
+                            ['', '', '', '', '', '', ''],
+                            ['', '', '', '', '', '', '']
+                        ],
+                        turn: 'r'
+                    }
+
+                    showBoard()
+                }
+
+                state.next = (state.next === 'r') ? 'b' : 'r'
+            })
+        }
+
+
+        //  Get current state from server and re-draw board
+        //
+        async function loadState() {
+            let response = await fetch(SERVICE)
+            console.log(response)
+            state = await response.json()
+            console.log(state)
+            showBoard()
+        }
+
+        //  Put current state to server
+        //
+        function saveState() {
+            fetch(SERVICE, {
+                method: 'PUT',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify(state)
+            })
+        }
+
+        function connect4winner(board, color) {
+            // horizontal
+            for (let i = 0; i < board.length; i++) {
+                let connected = 0
+                for (let j = 0; j < board[0].length; j++) {
+                    if (board[i][j] === color) {
+                        connected += 1
+                        if (connected === 4) return true
+                    } else {
+                        connected = 0
+                    }
+                }
+            }
+
+            // vertical
+            for (let j = 0; j < board[0].length; j++) {
+                let connected = 0
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i][j] === color) {
+                        connected += 1
+                        if (connected === 4) return true
+                    } else {
+                        connected = 0
+                    }
+                }
+            }
+
+            // diagonal: upper-left to lower-right
+            for (let i = 0; i < board.length - 3; i++) {
+                for (let j = 0; j < board[0].length - 3; j++) {
+                    if (board[i][j] === color) {
+                        if (
+                            board[i + 1][j + 1] === color &&
+                            board[i + 2][j + 2] === color &&
+                            board[i + 3][j + 3] === color
+                        ) {
+                            return true
+                        }
+                    }
+                }
+            }
+
+            // diagonal: upper-right to lower-left
+            for (let i = 0; i < board.length - 3; i++) {
+                for (let j = 3; j < board[0].length; j++) {
+                    if (board[i][j] === color) {
+                        if (
+                            board[i + 1][j - 1] === color &&
+                            board[i + 2][j - 2] === color &&
+                            board[i + 3][j - 3] === color
+                        ) {
+                            return true
+                        }
+                    }
+                }
+            }
+
+            return false
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<div class="board"></div>
+
+<div class="controls">
+    <button onclick="loadState()">Load</button>
+    <button onclick="saveState()">Save</button>
+</div>
+
+<script>
+    initGame()
+</script>
+
+</body>
+
+</html>

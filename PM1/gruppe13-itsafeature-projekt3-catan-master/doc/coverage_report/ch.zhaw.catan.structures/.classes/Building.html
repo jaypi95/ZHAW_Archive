@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Building</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">ch.zhaw.catan.structures</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Building (ch.zhaw.catan.structures)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Building</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (32/ 32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package ch.zhaw.catan.structures;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import ch.zhaw.catan.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.awt.Point;
+<i>6</i>&nbsp;import java.util.HashMap;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;import java.util.Map;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * This ist the superclass of Buildings e.g. city and settlement
+<i>12</i>&nbsp; *
+<i>13</i>&nbsp; * @author Silvan
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public abstract class Building extends Structure {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    private final SiedlerBoard board;
+<i>18</i>&nbsp;    private final Bank bank;
+<i>19</i>&nbsp;    private Point positionOfBuilding;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    public static final int WIN_POINTS = 1;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /**
+<i>24</i>&nbsp;     * Creates a building object
+<i>25</i>&nbsp;     *
+<i>26</i>&nbsp;     * @param siedlerGame object
+<i>27</i>&nbsp;     * @param bank        object
+<i>28</i>&nbsp;     */
+<i>29</i>&nbsp;    public Building(SiedlerGame siedlerGame, Bank bank) {
+<b class="fc"><i>30</i>&nbsp;        super(bank);</b>
+<b class="fc"><i>31</i>&nbsp;        this.bank = bank;</b>
+<b class="fc"><i>32</i>&nbsp;        this.board = siedlerGame.getBoard();</b>
+<b class="fc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * This method builds a building at the desired point
+<i>37</i>&nbsp;     *
+<i>38</i>&nbsp;     * @param position on which the building should be placed
+<i>39</i>&nbsp;     * @param player   of the settlement
+<i>40</i>&nbsp;     * @return if the action was successful
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    public boolean buildBuilding(Point position, Player player, Config.Structure structure, boolean isFree) {
+<b class="fc"><i>43</i>&nbsp;        boolean builtBuilding = false;</b>
+<i>44</i>&nbsp;
+<b class="fc"><i>45</i>&nbsp;        if (playerHasEnoughResourcesForStructure(player, structure) | isFree) {</b>
+<i>46</i>&nbsp;            try {
+<i>47</i>&nbsp;
+<b class="fc"><i>48</i>&nbsp;                if (structure == Config.Structure.SETTLEMENT) {</b>
+<b class="fc"><i>49</i>&nbsp;                    builtBuilding = board.buildSettlement(position, player.getFaction());</b>
+<i>50</i>&nbsp;                } else {
+<b class="fc"><i>51</i>&nbsp;                    builtBuilding = board.buildCity(position, player.getFaction());</b>
+<b class="fc"><i>52</i>&nbsp;                    player.addStructureToStock(Config.Structure.SETTLEMENT);</b>
+<i>53</i>&nbsp;                }
+<i>54</i>&nbsp;
+<b class="fc"><i>55</i>&nbsp;                if (!isFree) {</b>
+<b class="fc"><i>56</i>&nbsp;                    resourceExchangeAfterBuilding(player, structure);</b>
+<i>57</i>&nbsp;                }
+<b class="fc"><i>58</i>&nbsp;                positionOfBuilding = position;</b>
+<b class="fc"><i>59</i>&nbsp;                player.removeStructureFromStock(structure);</b>
+<b class="fc"><i>60</i>&nbsp;                player.addPoints(WIN_POINTS);</b>
+<i>61</i>&nbsp;
+<b class="fc"><i>62</i>&nbsp;            } catch (IllegalArgumentException illegalArgumentException) {</b>
+<b class="fc"><i>63</i>&nbsp;                builtBuilding = false;</b>
+<b class="fc"><i>64</i>&nbsp;            }</b>
+<i>65</i>&nbsp;        }
+<b class="fc"><i>66</i>&nbsp;        return builtBuilding;</b>
+<i>67</i>&nbsp;    }
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    /**
+<i>70</i>&nbsp;     * Get the Resources of all lands that are adjacent to your building
+<i>71</i>&nbsp;     *
+<i>72</i>&nbsp;     * @return a Map with the Resources
+<i>73</i>&nbsp;     */
+<i>74</i>&nbsp;    private Map&lt;Config.Resource, Long&gt; getResourceForBuildingNearLand() {
+<b class="fc"><i>75</i>&nbsp;        Map&lt;Config.Resource, Long&gt; resources = new HashMap&lt;&gt;();</b>
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;        //Get a List of the adjacent lands
+<b class="fc"><i>78</i>&nbsp;        List&lt;Config.Land&gt; listOfAdjacentLands = board.getFields(positionOfBuilding);</b>
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;        //Iterate trough the lands and put the Resources in the Map
+<b class="fc"><i>81</i>&nbsp;        for (Config.Land land : listOfAdjacentLands) {</b>
+<b class="fc"><i>82</i>&nbsp;            Config.Resource resource = land.getResource();</b>
+<i>83</i>&nbsp;            //Skip to the next land, if the Resource of the land is null
+<b class="fc"><i>84</i>&nbsp;            if (resource == null) {</b>
+<b class="fc"><i>85</i>&nbsp;                continue;</b>
+<i>86</i>&nbsp;            }
+<b class="fc"><i>87</i>&nbsp;            resources.put(resource, (long) 1);</b>
+<i>88</i>&nbsp;
+<b class="fc"><i>89</i>&nbsp;        }</b>
+<i>90</i>&nbsp;
+<b class="fc"><i>91</i>&nbsp;        return resources;</b>
+<i>92</i>&nbsp;    }
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    /**
+<i>95</i>&nbsp;     * Pays out the resources for this building
+<i>96</i>&nbsp;     *
+<i>97</i>&nbsp;     * @param player which gets the resources
+<i>98</i>&nbsp;     */
+<i>99</i>&nbsp;    public void payOutPlayer(Player player) {
+<b class="fc"><i>100</i>&nbsp;        Map&lt;Config.Resource, Long&gt; resourcesToAdd = getResourceForBuildingNearLand();</b>
+<b class="fc"><i>101</i>&nbsp;        bank.removeResourceWithMap(resourcesToAdd);</b>
+<b class="fc"><i>102</i>&nbsp;        player.addResourceWithMap(resourcesToAdd);</b>
+<b class="fc"><i>103</i>&nbsp;    }</b>
+<i>104</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-04 14:51</div>
+</div>
+</body>
+</html>

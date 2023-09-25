@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=Uhrenanzeige
+comment0.text=\n\ Die\ Klassen\ Uhrenanzeige\ implementiert\ die\ Anzeige\ einer\ Digitaluhr.\n\ Die\ Anzeige\ zeigt\ Stunden\ und\ Minuten.\ Der\ Anzeigebereich\ reicht\ von\n\ 00\:00\ (Mitternacht)\ bis\ 23\:59\ (eine\ Minute\ vor\ Mitternacht).\n\n\ Eine\ Uhrenanzeige\ sollte\ min\u00FCtlich\ "Taktsignale"\ (\u00FCber\ die\ Operation\n\ "taktsignalGeben")\ erhalten,\ damit\ sie\ die\ Anzeige\ aktualisieren\ \n\ kann.\ Dies\ geschieht,\ wie\ man\ es\ bei\ einer\ Uhr\ erwartet\:\ Die\ \n\ Stunden\ erh\u00F6hen\ sich,\ wenn\ das\ Minutenlimit\ einer\ Stunde\ erreicht\n\ ist.\n\ \n\ @author\ Michael\ K\u00F6lling\ und\ David\ J.\ Barnes\n\ @version\ 31.07.2011\n
+comment1.params=
+comment1.target=Uhrenanzeige()
+comment1.text=\n\ Konstruktor\ f\u00FCr\ ein\ Exemplar\ von\ Uhrenanzeige.\n\ Mit\ diesem\ Konstruktor\ wird\ die\ Anzeige\ auf\ 00\:00\ initialisiert.\n
+comment2.params=stunde\ minute\ sekunde
+comment2.target=Uhrenanzeige(int,\ int,\ int)
+comment2.text=\n\ Konstruktor\ f\u00FCr\ ein\ Exemplar\ von\ Uhrenanzeige.\n\ Mit\ diesem\ Konstruktor\ wird\ die\ Anzeige\ auf\ den\ Wert\n\ initialisiert,\ der\ durch\ 'stunde',\ 'minute'\ und\ 'sekunde'\n\ definiert\ ist.\n
+comment3.params=
+comment3.target=void\ taktsignalGeben()
+comment3.text=\n\ Diese\ Operation\ sollte\ einmal\ pro\ Sekunde\ aufgerufen\ werden\ -\n\ sie\ sorgt\ daf\u00FCr,\ dass\ diese\ Uhrenanzeige\ um\ eine\ Sekunde\n\ weiter\ gestellt\ wird.\n
+comment4.params=stunde\ minute\ sekunde
+comment4.target=void\ setzeUhrzeit(int,\ int,\ int)
+comment4.text=\n\ Setze\ die\ Uhrzeit\ dieser\ Anzeige\ auf\ die\ gegebene\ 'stunde',\ sekunde\ und\n\ 'minute'.\n
+comment5.params=
+comment5.target=java.lang.String\ gibUhrzeit()
+comment5.text=\n\ Liefere\ die\ aktuelle\ Uhrzeit\ dieser\ Uhrenanzeige\ im\ Format\ SS\:MM\:ss.\n
+comment6.params=
+comment6.target=void\ anzeigeAktualisieren()
+comment6.text=\n\ Aktualisiere\ die\ interne\ Zeichenkette,\ die\ die\ Zeitanzeige\ h\uFFFDlt.\n
+numComments=7

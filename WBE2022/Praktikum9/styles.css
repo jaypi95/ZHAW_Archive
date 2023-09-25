@@ -1,0 +1,44 @@
+div {
+    box-sizing: border-box;
+}
+
+.button-reset {
+    align-items: center;
+    background-color: #F00;
+    border: 2px solid #111;
+    color: #111;
+    cursor: wait; /* Wait for classmates to copy */
+    font-size: 16px;
+    height: 48px;
+
+}
+
+.board {
+    width: 91vmin;
+    margin: auto;
+    outline: 1px solid black;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.board .field {
+    border: 1px solid black;
+    width: 13vmin;
+    height: 13vmin;
+
+}
+
+.board .field .piece {
+    width: 11vmin;
+    height: 11vmin;
+    border-radius: 50%;
+    margin: 1vmin;
+}
+
+.board .field .blue {
+    background-color: blue;
+}
+
+.board .field .red {
+    background-color: red;
+}

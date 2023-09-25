@@ -1,0 +1,55 @@
+import sympy as sy
+import numpy as np
+import matplotlib.pyplot as plt
+
+"""
+=======================================================================================================================
+INPUT
+=======================================================================================================================
+"""
+
+x = np.array([0, 1, 2, 3, 4], dtype=np.float64)  # Messwerte xi
+y = np.array([3, 1, 0.5, 0.2, 0.05], dtype=np.float64)  # Messwerte yi
+
+lam0 = np.array([3, -1], dtype=np.float64)  # Startvektor für Iteration
+tol = 1e-5     # Fehlertoleranz
+max_iter = 30  # Maximale Iterationen
+
+"""
+=======================================================================================================================
+"""
+
+def f(x, a):
+    return a[0] * sy.exp(a[1] * x)
+
+
+a = sy.symbols('a:{n:d}'.format(n=lam0.size))
+g = sy.Matrix([y[k] - f(x[k], a) for k in range(x.shape[0])])  # Fehlerfunktion für alle (xi, yi)
+Dg = g.jacobian(a)
+
+g_lambda = sy.lambdify([a], g, 'numpy')
+Dg_lambda = sy.lambdify([a], Dg, 'numpy')
+
+k = 0
+lam = np.copy(lam0)
+increment = tol + 1
+err_func = np.linalg.norm(g_lambda(lam)) ** 2
+
+while increment > tol and k <= max_iter:
+    # QR-Zerlegung von Dg(lam)
+    [Q, R] = np.linalg.qr(Dg_lambda(lam))
+    delta = np.linalg.solve(R, -Q.T @ g_lambda(lam)).flatten()
+    # Achtung: flatten() braucht es, um aus dem Spaltenvektor delta wieder
+    # eine "flachen" Vektor zu machen, da g hier nicht mit Spaltenvektoren als Input umgehen kann
+
+    lam = lam + delta
+    err_func = np.linalg.norm(g_lambda(lam)) ** 2
+    increment = np.linalg.norm(delta)
+    print('Iteration: ', k)
+    print('lambda = ', lam)
+    print('Inkrement = ', increment)
+    print('Fehlerfunktional =', err_func)
+    print()
+    k = k + 1
+
+exit()

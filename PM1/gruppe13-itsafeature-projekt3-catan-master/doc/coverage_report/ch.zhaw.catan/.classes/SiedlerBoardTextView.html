@@ -1,0 +1,163 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SiedlerBoardTextView</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">ch.zhaw.catan</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SiedlerBoardTextView (ch.zhaw.catan)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SiedlerBoardTextView</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.7%
+  </span>
+  <span class="absValue">
+    (2/ 30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package ch.zhaw.catan;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import ch.zhaw.catan.Config.Land;
+<i>4</i>&nbsp;import ch.zhaw.hexboard.HexBoardTextView;
+<i>5</i>&nbsp;import org.beryx.textio.TextIO;
+<i>6</i>&nbsp;import org.beryx.textio.TextIoFactory;
+<i>7</i>&nbsp;import org.beryx.textio.TextTerminal;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.util.ArrayList;
+<i>10</i>&nbsp;import java.util.Arrays;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * This class has utility methods to print the whole gameBoard to the textTerminal directly
+<i>15</i>&nbsp; *
+<i>16</i>&nbsp; * @author defiljon
+<i>17</i>&nbsp; */
+<i>18</i>&nbsp;public class SiedlerBoardTextView extends HexBoardTextView&lt;Land, String, String, Annotation&gt; {
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    public SiedlerBoardTextView(SiedlerBoard board) {
+<b class="fc"><i>21</i>&nbsp;        super(board);</b>
+<b class="fc"><i>22</i>&nbsp;    }</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * initialise an object of the siedlerBoardTextView
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public void printGameBoard() {
+<b class="nc"><i>28</i>&nbsp;        String gameBoard = addCoordinates(toString());</b>
+<b class="nc"><i>29</i>&nbsp;        TextIO textIO = TextIoFactory.getTextIO();</b>
+<b class="nc"><i>30</i>&nbsp;        TextTerminal&lt;?&gt; textTerminal = textIO.getTextTerminal();</b>
+<b class="nc"><i>31</i>&nbsp;        textTerminal.print(gameBoard);</b>
+<b class="nc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     * Adds a coordinate system to the board
+<i>36</i>&nbsp;     *
+<i>37</i>&nbsp;     * @param board the siedler board
+<i>38</i>&nbsp;     * @return board with coordinates
+<i>39</i>&nbsp;     */
+<i>40</i>&nbsp;    protected String addCoordinates(String board) {
+<b class="nc"><i>41</i>&nbsp;        final String SEVEN_SPACES = &quot;       &quot;;</b>
+<b class="nc"><i>42</i>&nbsp;        final String THREE_SPACES = &quot;   &quot;;</b>
+<b class="nc"><i>43</i>&nbsp;        final String TWO_SPACES = &quot;  &quot;;</b>
+<b class="nc"><i>44</i>&nbsp;        final String ONE_SPACE = &quot; &quot;;</b>
+<i>45</i>&nbsp;
+<b class="nc"><i>46</i>&nbsp;        List&lt;String&gt; split = new ArrayList&lt;&gt;(Arrays.asList(board.split(System.lineSeparator())));</b>
+<i>47</i>&nbsp;        // remove all lines that are empty (only contain spaces)
+<b class="nc"><i>48</i>&nbsp;        split.removeIf(line -&gt; line.trim().isEmpty());</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;        // * add yAxis
+<i>51</i>&nbsp;        // add the number on first line manually
+<b class="nc"><i>52</i>&nbsp;        split.set(0, 0 + ONE_SPACE + split.get(0));</b>
+<i>53</i>&nbsp;        // add numbers on the lines in between
+<b class="nc"><i>54</i>&nbsp;        int number = 1;</b>
+<b class="nc"><i>55</i>&nbsp;        for (int lineIndex = 0; lineIndex &lt; split.size() - 1; lineIndex++) {</b>
+<b class="nc"><i>56</i>&nbsp;            if (lineIndex % 3 == 0 &amp;&amp; lineIndex % 6 != 0) {</b>
+<i>57</i>&nbsp;                // iterate over every yAxis coord &quot;block&quot; (3lines)
+<b class="nc"><i>58</i>&nbsp;                split.set(lineIndex, ((number &lt; 10) ? (number + ONE_SPACE) : number) + split.get(lineIndex));</b>
+<b class="nc"><i>59</i>&nbsp;                number += 2; // +2 because we skip the line in the center of the fields</b>
+<b class="nc"><i>60</i>&nbsp;                split.set(lineIndex + 3, ((number &lt; 10) ? (number + ONE_SPACE) : number) + split.get(lineIndex + 3));</b>
+<b class="nc"><i>61</i>&nbsp;                number++; // need to increment by one for next iteration</b>
+<b class="nc"><i>62</i>&nbsp;            } else if (lineIndex % 6 != 0) {</b>
+<i>63</i>&nbsp;                // we don&#39;t wanna add a space to the lines that have index % 6 == 0 because we added a number there before
+<b class="nc"><i>64</i>&nbsp;                split.set(lineIndex, TWO_SPACES + split.get(lineIndex));</b>
+<i>65</i>&nbsp;            }
+<i>66</i>&nbsp;        }
+<i>67</i>&nbsp;        // add the number on the last line
+<b class="nc"><i>68</i>&nbsp;        split.set(split.size() - 1, number + split.get(split.size() - 1));</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;        // * add xAxis
+<b class="nc"><i>71</i>&nbsp;        StringBuilder xAxis = new StringBuilder();</b>
+<b class="nc"><i>72</i>&nbsp;        xAxis.append(THREE_SPACES); // we need to offset the numbers by 3 spaces (because of the y axis and to center them)</b>
+<b class="nc"><i>73</i>&nbsp;        for (int i = 0; i &lt;= 14; i++) {</b>
+<b class="nc"><i>74</i>&nbsp;            xAxis.append(i).append((i &lt; 10) ? (SEVEN_SPACES + ONE_SPACE) : SEVEN_SPACES);</b>
+<i>75</i>&nbsp;        }
+<b class="nc"><i>76</i>&nbsp;        split.add(0, xAxis.toString());</b>
+<i>77</i>&nbsp;
+<b class="nc"><i>78</i>&nbsp;        return String.join(System.lineSeparator(), split) + System.lineSeparator() + System.lineSeparator();</b>
+<i>79</i>&nbsp;    }
+<i>80</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-04 14:51</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,554 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MainGamePhase</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">ch.zhaw.catan</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MainGamePhase (ch.zhaw.catan)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainGamePhase</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 168)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MainGamePhase$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainGamePhase$buildCommand</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainGamePhase$Commands</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 182)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package ch.zhaw.catan;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import ch.zhaw.catan.Config.Faction;
+<i>4</i>&nbsp;import ch.zhaw.catan.Config.Resource;
+<i>5</i>&nbsp;import ch.zhaw.catan.Config.Structure;
+<i>6</i>&nbsp;import org.beryx.textio.IntInputReader;
+<i>7</i>&nbsp;import org.beryx.textio.StringInputReader;
+<i>8</i>&nbsp;import org.beryx.textio.TextIO;
+<i>9</i>&nbsp;import org.beryx.textio.TextTerminal;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.awt.Point;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;import java.util.Map;
+<i>14</i>&nbsp;import java.util.Random;
+<i>15</i>&nbsp;import java.util.stream.IntStream;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;/**
+<i>19</i>&nbsp; * This class runs the main part of the game after the board has been set up and after the settlement phase finished.
+<i>20</i>&nbsp; * It basically receives the input from the main method and starts the third phase of the game.
+<i>21</i>&nbsp; * With that input it either calls the appropriate methods to build something, to trade with the bank or to throw the dice.
+<i>22</i>&nbsp; *
+<i>23</i>&nbsp; * @author peterju1
+<i>24</i>&nbsp; */
+<i>25</i>&nbsp;public class MainGamePhase {
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    private boolean start;
+<i>29</i>&nbsp;    private boolean turn;
+<i>30</i>&nbsp;    private final SiedlerGame siedlerGame;
+<i>31</i>&nbsp;    private final SiedlerBoardTextView boardPrinter;
+<i>32</i>&nbsp;    private final TextTerminal&lt;?&gt; textTerminal;
+<i>33</i>&nbsp;    private final StringInputReader stringInputReader;
+<i>34</i>&nbsp;    private final IntInputReader intInputReader;
+<i>35</i>&nbsp;    private final TextIO textIO;
+<i>36</i>&nbsp;    private Faction winner;
+<i>37</i>&nbsp;    private String quit;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * Inits the  MainGamePhase object
+<i>41</i>&nbsp;     *
+<i>42</i>&nbsp;     * @param textIO the textIO object to get an instance of the terminal
+<i>43</i>&nbsp;     * @param siedlerGame siedlerGame object in which the game is running
+<i>44</i>&nbsp;     */
+<b class="nc"><i>45</i>&nbsp;    public MainGamePhase(TextIO textIO, SiedlerGame siedlerGame) {</b>
+<b class="nc"><i>46</i>&nbsp;        boardPrinter = new SiedlerBoardTextView(siedlerGame.getBoard());</b>
+<b class="nc"><i>47</i>&nbsp;        start = true;</b>
+<b class="nc"><i>48</i>&nbsp;        textTerminal = textIO.getTextTerminal();</b>
+<b class="nc"><i>49</i>&nbsp;        stringInputReader = textIO.newStringInputReader();</b>
+<b class="nc"><i>50</i>&nbsp;        intInputReader = textIO.newIntInputReader();</b>
+<b class="nc"><i>51</i>&nbsp;        winner = null;</b>
+<b class="nc"><i>52</i>&nbsp;        quit = &quot;no&quot;;</b>
+<b class="nc"><i>53</i>&nbsp;        this.textIO = textIO;</b>
+<b class="nc"><i>54</i>&nbsp;        this.siedlerGame = siedlerGame;</b>
+<i>55</i>&nbsp;
+<b class="nc"><i>56</i>&nbsp;    }</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * This {@link Enum} specifies the commands in the main action interface
+<i>60</i>&nbsp;     */
+<b class="nc"><i>61</i>&nbsp;    public enum Commands {</b>
+<b class="nc"><i>62</i>&nbsp;        BUILD(&quot;BUILD&quot;), TRADE(&quot;TRADE&quot;), RESOURCE(&quot;SHOW RESOURCES&quot;), FINISH(&quot;FINISH TURN&quot;), QUIT(&quot;QUIT GAME&quot;);</b>
+<i>63</i>&nbsp;        private final String name;
+<i>64</i>&nbsp;
+<b class="nc"><i>65</i>&nbsp;        Commands(String name) {</b>
+<b class="nc"><i>66</i>&nbsp;            this.name = name;</b>
+<b class="nc"><i>67</i>&nbsp;        }</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;        @Override
+<i>70</i>&nbsp;        public String toString() {
+<b class="nc"><i>71</i>&nbsp;            return name;</b>
+<i>72</i>&nbsp;        }
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    /**
+<i>76</i>&nbsp;     * This {@link Enum} specifies the commands in the building action interface
+<i>77</i>&nbsp;     */
+<b class="nc"><i>78</i>&nbsp;    public enum buildCommand {</b>
+<b class="nc"><i>79</i>&nbsp;        SETTLEMENT(&quot;BUILD SETTLEMENT&quot;), CITY(&quot;BUILD CITY&quot;), ROAD(&quot;BUILD ROAD&quot;), COST(&quot;SHOW COSTS&quot;), RETURN(&quot;RETURN TO MAIN MENU&quot;);</b>
+<i>80</i>&nbsp;        private final String name;
+<i>81</i>&nbsp;
+<b class="nc"><i>82</i>&nbsp;        buildCommand(String name) {</b>
+<b class="nc"><i>83</i>&nbsp;            this.name = name;</b>
+<b class="nc"><i>84</i>&nbsp;        }</b>
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;        @Override
+<i>87</i>&nbsp;        public String toString() {
+<b class="nc"><i>88</i>&nbsp;            return name;</b>
+<i>89</i>&nbsp;        }
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * This Method contains a loop + an action interface for the user. It is the main interface of the game.
+<i>94</i>&nbsp;     * It takes in an user input and runs each turn. At the end of the turn it switches to the next player.
+<i>95</i>&nbsp;     */
+<i>96</i>&nbsp;    public void gameRunning() {
+<b class="nc"><i>97</i>&nbsp;        while (start) {</b>
+<b class="nc"><i>98</i>&nbsp;            proceedWithDiceThrow();</b>
+<b class="nc"><i>99</i>&nbsp;            turn = true;</b>
+<b class="nc"><i>100</i>&nbsp;            while (turn) {</b>
+<b class="nc"><i>101</i>&nbsp;                switch (getEnumValue(textIO, Commands.class)) {</b>
+<i>102</i>&nbsp;                    case BUILD:
+<b class="nc"><i>103</i>&nbsp;                        proceedWithBuilding();</b>
+<b class="nc"><i>104</i>&nbsp;                        break;</b>
+<i>105</i>&nbsp;                    case TRADE:
+<b class="nc"><i>106</i>&nbsp;                        proceedWithTrading();</b>
+<b class="nc"><i>107</i>&nbsp;                        break;</b>
+<i>108</i>&nbsp;                    case RESOURCE:
+<b class="nc"><i>109</i>&nbsp;                        proceedWithResource();</b>
+<b class="nc"><i>110</i>&nbsp;                        break;</b>
+<i>111</i>&nbsp;                    case FINISH:
+<b class="nc"><i>112</i>&nbsp;                        turn = false;</b>
+<b class="nc"><i>113</i>&nbsp;                        break;</b>
+<i>114</i>&nbsp;                    case QUIT:
+<b class="nc"><i>115</i>&nbsp;                        proceedWithExit();</b>
+<b class="nc"><i>116</i>&nbsp;                        break;</b>
+<i>117</i>&nbsp;                    default:
+<b class="nc"><i>118</i>&nbsp;                        throw new IllegalStateException(&quot;Internal error found - Command not implemented.&quot;);</b>
+<i>119</i>&nbsp;                }
+<i>120</i>&nbsp;            }
+<b class="nc"><i>121</i>&nbsp;            if (quit.equals(&quot;yes&quot;)) {</b>
+<b class="nc"><i>122</i>&nbsp;                start = false;</b>
+<i>123</i>&nbsp;            }
+<i>124</i>&nbsp;
+<b class="nc"><i>125</i>&nbsp;            winner = siedlerGame.getWinner();</b>
+<b class="nc"><i>126</i>&nbsp;            if (start) {</b>
+<b class="nc"><i>127</i>&nbsp;                if (winner != null) {</b>
+<b class="nc"><i>128</i>&nbsp;                    textTerminal.println(&quot;Congratulations &quot; + winner.name() + &quot; you have won the game.&quot;);</b>
+<b class="nc"><i>129</i>&nbsp;                    proceedWithExit();</b>
+<i>130</i>&nbsp;                } else {
+<b class="nc"><i>131</i>&nbsp;                    siedlerGame.switchToNextPlayer();</b>
+<b class="nc"><i>132</i>&nbsp;                    boardPrinter.printGameBoard();</b>
+<b class="nc"><i>133</i>&nbsp;                    textTerminal.println(&quot;\nIt&#39;s &quot; + siedlerGame.getCurrentPlayerFaction().name() + &quot;&#39;s turn.&quot;);</b>
+<i>134</i>&nbsp;                }
+<i>135</i>&nbsp;            }
+<i>136</i>&nbsp;        }
+<b class="nc"><i>137</i>&nbsp;    }</b>
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;    /**
+<i>141</i>&nbsp;     * Calls the method to generate a new dice throw
+<i>142</i>&nbsp;     * Takes that number and calls the method to pay out the players in resources.
+<i>143</i>&nbsp;     */
+<i>144</i>&nbsp;    private void proceedWithDiceThrow() {
+<b class="nc"><i>145</i>&nbsp;        int thrownNumber = generateDiceThrow();</b>
+<b class="nc"><i>146</i>&nbsp;        textTerminal.println(&quot;\nThrow dice...&quot;);</b>
+<i>147</i>&nbsp;
+<b class="nc"><i>148</i>&nbsp;        textTerminal.println(&quot;\nResult: &quot; + thrownNumber + &quot;\n&quot;);</b>
+<i>149</i>&nbsp;
+<b class="nc"><i>150</i>&nbsp;        if (thrownNumber != 7) {</b>
+<b class="nc"><i>151</i>&nbsp;            Map&lt;Faction, List&lt;Resource&gt;&gt; payout = siedlerGame.throwDice(thrownNumber); //The method &quot;throwDice&quot; actually pays out the resources, the name is just very poorly chosen.</b>
+<b class="nc"><i>152</i>&nbsp;            for (Map.Entry&lt;Faction, List&lt;Resource&gt;&gt; entry : payout.entrySet()) {</b>
+<i>153</i>&nbsp;
+<b class="nc"><i>154</i>&nbsp;                if (entry.getValue().size() == 0) {</b>
+<b class="nc"><i>155</i>&nbsp;                    textTerminal.println(&quot;\nUnfortunately, no resources have been paid out to &quot; + entry.getKey().name());</b>
+<i>156</i>&nbsp;                } else {
+<b class="nc"><i>157</i>&nbsp;                    textTerminal.println(&quot;\nThe following resources have been paid out to &quot; + entry.getKey().name());</b>
+<b class="nc"><i>158</i>&nbsp;                    for (Resource entry1 : entry.getValue()) {</b>
+<b class="nc"><i>159</i>&nbsp;                        textTerminal.println(entry1.name());</b>
+<b class="nc"><i>160</i>&nbsp;                    }</b>
+<i>161</i>&nbsp;                }
+<b class="nc"><i>162</i>&nbsp;            }</b>
+<b class="nc"><i>163</i>&nbsp;        } else {</b>
+<b class="nc"><i>164</i>&nbsp;            proceedWithBandit();</b>
+<i>165</i>&nbsp;        }
+<b class="nc"><i>166</i>&nbsp;    }</b>
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;    /**
+<i>169</i>&nbsp;     * Shows available building types, their cost and calls the appropriate methods to build it.
+<i>170</i>&nbsp;     * When the player chooses &quot;Return&quot; --&gt; return to the previous menu
+<i>171</i>&nbsp;     */
+<i>172</i>&nbsp;    private void proceedWithBuilding() {
+<b class="nc"><i>173</i>&nbsp;        boolean build = true;</b>
+<b class="nc"><i>174</i>&nbsp;        while (build) {</b>
+<b class="nc"><i>175</i>&nbsp;            switch (getEnumValue(textIO, buildCommand.class)) {</b>
+<i>176</i>&nbsp;                case SETTLEMENT:
+<b class="nc"><i>177</i>&nbsp;                    caseBuildSettlement();</b>
+<b class="nc"><i>178</i>&nbsp;                    break;</b>
+<i>179</i>&nbsp;                case ROAD:
+<b class="nc"><i>180</i>&nbsp;                    caseBuildRoad();</b>
+<b class="nc"><i>181</i>&nbsp;                    break;</b>
+<i>182</i>&nbsp;                case COST:
+<b class="nc"><i>183</i>&nbsp;                    casePrintStructureCosts();</b>
+<b class="nc"><i>184</i>&nbsp;                    break;</b>
+<i>185</i>&nbsp;                case CITY:
+<b class="nc"><i>186</i>&nbsp;                    caseBuildCity();</b>
+<i>187</i>&nbsp;                case RETURN:
+<b class="nc"><i>188</i>&nbsp;                    build = false;</b>
+<b class="nc"><i>189</i>&nbsp;                    break;</b>
+<i>190</i>&nbsp;                default:
+<b class="nc"><i>191</i>&nbsp;                    throw new IllegalStateException(&quot;Internal error found - Command not implemented.&quot;);</b>
+<i>192</i>&nbsp;            }
+<i>193</i>&nbsp;        }
+<b class="nc"><i>194</i>&nbsp;    }</b>
+<i>195</i>&nbsp;
+<i>196</i>&nbsp;    /**
+<i>197</i>&nbsp;     * This method asks for the cards that should be traded with the bank and calls the appropriate methods in SiedlerGame
+<i>198</i>&nbsp;     */
+<i>199</i>&nbsp;    private void proceedWithTrading() {
+<b class="nc"><i>200</i>&nbsp;        proceedWithResource();</b>
+<i>201</i>&nbsp;
+<b class="nc"><i>202</i>&nbsp;        textTerminal.println(&quot;\nResource to trade in&quot;);</b>
+<b class="nc"><i>203</i>&nbsp;        Config.Resource tradeInResource = getEnumValue(textIO, Config.Resource.class);</b>
+<i>204</i>&nbsp;
+<b class="nc"><i>205</i>&nbsp;        textTerminal.println(&quot;\nResource you wish to receive&quot;);</b>
+<b class="nc"><i>206</i>&nbsp;        Config.Resource tradeOutResource = getEnumValue(textIO, Config.Resource.class);</b>
+<i>207</i>&nbsp;
+<b class="nc"><i>208</i>&nbsp;        if (siedlerGame.tradeWithBankFourToOne(tradeInResource, tradeOutResource)) {</b>
+<b class="nc"><i>209</i>&nbsp;            textTerminal.println(&quot;Successfully traded with the bank.&quot;);</b>
+<i>210</i>&nbsp;        } else {
+<b class="nc"><i>211</i>&nbsp;            textTerminal.println(&quot;Your trade failed. Make sure you have enough resources to trade in.&quot;);</b>
+<i>212</i>&nbsp;        }
+<i>213</i>&nbsp;
+<i>214</i>&nbsp;
+<b class="nc"><i>215</i>&nbsp;    }</b>
+<i>216</i>&nbsp;
+<i>217</i>&nbsp;    /**
+<i>218</i>&nbsp;     * This method shows the Resources that the current Player owns.
+<i>219</i>&nbsp;     */
+<i>220</i>&nbsp;    private void proceedWithResource() {
+<i>221</i>&nbsp;
+<b class="nc"><i>222</i>&nbsp;        textTerminal.println(&quot;\nYou have the following resources in hand\n&quot;);</b>
+<b class="nc"><i>223</i>&nbsp;        for (Resource resource : Resource.values()) {</b>
+<b class="nc"><i>224</i>&nbsp;            int stock = siedlerGame.getCurrentPlayerResourceStock(resource);</b>
+<b class="nc"><i>225</i>&nbsp;            textTerminal.println(resource.name() + &quot;: &quot; + stock);</b>
+<i>226</i>&nbsp;        }
+<b class="nc"><i>227</i>&nbsp;        textTerminal.println(&quot;\n&quot;);</b>
+<b class="nc"><i>228</i>&nbsp;    }</b>
+<i>229</i>&nbsp;
+<i>230</i>&nbsp;    /**
+<i>231</i>&nbsp;     * This method exits the game with a confirmation.
+<i>232</i>&nbsp;     */
+<i>233</i>&nbsp;    private void proceedWithExit() {
+<b class="nc"><i>234</i>&nbsp;        if (winner != null) {</b>
+<b class="nc"><i>235</i>&nbsp;            textTerminal.println(&quot;Thank you for playing Catan&quot;);</b>
+<b class="nc"><i>236</i>&nbsp;            textTerminal.println(&quot;Press Enter to quit&quot;);</b>
+<b class="nc"><i>237</i>&nbsp;            stringInputReader.read();</b>
+<b class="nc"><i>238</i>&nbsp;            start = false;</b>
+<i>239</i>&nbsp;        } else {
+<b class="nc"><i>240</i>&nbsp;            textTerminal.println(&quot;Are you sure?&quot;);</b>
+<b class="nc"><i>241</i>&nbsp;            textTerminal.println(&quot;yes / no&quot;);</b>
+<b class="nc"><i>242</i>&nbsp;            String sure = stringInputReader.read();</b>
+<i>243</i>&nbsp;
+<b class="nc"><i>244</i>&nbsp;            if (sure.equals(&quot;yes&quot;)) {</b>
+<b class="nc"><i>245</i>&nbsp;                textTerminal.println(&quot;Bye!&quot;);</b>
+<b class="nc"><i>246</i>&nbsp;                quit = sure;</b>
+<b class="nc"><i>247</i>&nbsp;                turn = false;</b>
+<i>248</i>&nbsp;
+<i>249</i>&nbsp;
+<i>250</i>&nbsp;            }
+<i>251</i>&nbsp;        }
+<b class="nc"><i>252</i>&nbsp;    }</b>
+<i>253</i>&nbsp;
+<i>254</i>&nbsp;    /**
+<i>255</i>&nbsp;     * This method asks for the Settlement coordinates, and calls the place Settlement method.
+<i>256</i>&nbsp;     */
+<i>257</i>&nbsp;    private void caseBuildSettlement() {
+<i>258</i>&nbsp;
+<b class="nc"><i>259</i>&nbsp;        textTerminal.println(&quot;\nX-Coordinate:&quot;);</b>
+<b class="nc"><i>260</i>&nbsp;        int param1 = intInputReader.read();</b>
+<i>261</i>&nbsp;
+<b class="nc"><i>262</i>&nbsp;        textTerminal.println(&quot;\nY-Coordinate&quot;);</b>
+<b class="nc"><i>263</i>&nbsp;        int param2 = intInputReader.read();</b>
+<i>264</i>&nbsp;
+<b class="nc"><i>265</i>&nbsp;        Point point = new Point(param1, param2);</b>
+<i>266</i>&nbsp;
+<b class="nc"><i>267</i>&nbsp;        if (siedlerGame.buildSettlement(point)) {</b>
+<b class="nc"><i>268</i>&nbsp;            boardPrinter.printGameBoard();</b>
+<b class="nc"><i>269</i>&nbsp;            textTerminal.println(&quot;\nSettlement successfully placed.&quot;);</b>
+<i>270</i>&nbsp;        } else {
+<b class="nc"><i>271</i>&nbsp;            textTerminal.println(&quot;\nSettlement could not be placed. Make sure you have enough resources and that your input was valid&quot;);</b>
+<i>272</i>&nbsp;        }
+<i>273</i>&nbsp;
+<b class="nc"><i>274</i>&nbsp;    }</b>
+<i>275</i>&nbsp;
+<i>276</i>&nbsp;    /**
+<i>277</i>&nbsp;     * This method asks for the City coordinates, and calls the place City method.
+<i>278</i>&nbsp;     */
+<i>279</i>&nbsp;    private void caseBuildCity() {
+<i>280</i>&nbsp;
+<b class="nc"><i>281</i>&nbsp;        textTerminal.println(&quot;\nX-Coordinate:&quot;);</b>
+<b class="nc"><i>282</i>&nbsp;        int param1 = intInputReader.read();</b>
+<i>283</i>&nbsp;
+<b class="nc"><i>284</i>&nbsp;        textTerminal.println(&quot;\nY-Coordinate&quot;);</b>
+<b class="nc"><i>285</i>&nbsp;        int param2 = intInputReader.read();</b>
+<i>286</i>&nbsp;
+<b class="nc"><i>287</i>&nbsp;        Point point = new Point(param1, param2);</b>
+<i>288</i>&nbsp;
+<b class="nc"><i>289</i>&nbsp;        if (siedlerGame.buildCity(point)) {</b>
+<b class="nc"><i>290</i>&nbsp;            boardPrinter.printGameBoard();</b>
+<b class="nc"><i>291</i>&nbsp;            textTerminal.println(&quot;\nCity successfully placed.&quot;);</b>
+<i>292</i>&nbsp;        } else {
+<b class="nc"><i>293</i>&nbsp;            textTerminal.println(&quot;\nCity could not be placed. Make sure you have enough resources and that your input was valid&quot;);</b>
+<i>294</i>&nbsp;        }
+<i>295</i>&nbsp;
+<b class="nc"><i>296</i>&nbsp;    }</b>
+<i>297</i>&nbsp;
+<i>298</i>&nbsp;    /**
+<i>299</i>&nbsp;     * This Method asks for the coordinates one by one, and calls the place Road method
+<i>300</i>&nbsp;     */
+<i>301</i>&nbsp;    private void caseBuildRoad() {
+<i>302</i>&nbsp;
+<b class="nc"><i>303</i>&nbsp;        textTerminal.println(&quot;S\ntart X-Coordinate:&quot;);</b>
+<b class="nc"><i>304</i>&nbsp;        int param11 = intInputReader.read();</b>
+<i>305</i>&nbsp;
+<b class="nc"><i>306</i>&nbsp;        textTerminal.println(&quot;\nStart Y-Coordinate&quot;);</b>
+<b class="nc"><i>307</i>&nbsp;        int param12 = intInputReader.read();</b>
+<i>308</i>&nbsp;
+<b class="nc"><i>309</i>&nbsp;        textTerminal.println(&quot;\nEnd X-Coordinate:&quot;);</b>
+<b class="nc"><i>310</i>&nbsp;        int param21 = intInputReader.read();</b>
+<i>311</i>&nbsp;
+<b class="nc"><i>312</i>&nbsp;        textTerminal.println(&quot;\nEnd Y-Coordinate&quot;);</b>
+<b class="nc"><i>313</i>&nbsp;        int param22 = intInputReader.read();</b>
+<i>314</i>&nbsp;
+<b class="nc"><i>315</i>&nbsp;        Point point1 = new Point(param11, param12);</b>
+<b class="nc"><i>316</i>&nbsp;        Point point2 = new Point(param21, param22);</b>
+<i>317</i>&nbsp;
+<b class="nc"><i>318</i>&nbsp;        if (siedlerGame.buildRoad(point1, point2)) {</b>
+<b class="nc"><i>319</i>&nbsp;            boardPrinter.printGameBoard();</b>
+<b class="nc"><i>320</i>&nbsp;            textTerminal.println(&quot;\nRoad successfully placed.\n&quot;);</b>
+<i>321</i>&nbsp;        } else {
+<b class="nc"><i>322</i>&nbsp;            textTerminal.println(&quot;\nRoad could not be placed. Make sure you have enough resources and that your input was valid\n&quot;);</b>
+<i>323</i>&nbsp;        }
+<i>324</i>&nbsp;
+<i>325</i>&nbsp;
+<b class="nc"><i>326</i>&nbsp;    }</b>
+<i>327</i>&nbsp;
+<i>328</i>&nbsp;    /**
+<i>329</i>&nbsp;     * This method prints out the cost of each available Structure in resources.
+<i>330</i>&nbsp;     */
+<i>331</i>&nbsp;    private void casePrintStructureCosts() {
+<i>332</i>&nbsp;
+<i>333</i>&nbsp;        //Would be easier to extend with new buildings if we could use java.lang and reflection to loop through the methods
+<b class="nc"><i>334</i>&nbsp;        Map&lt;Config.Resource, Long&gt; settlement = Structure.SETTLEMENT.getCostsAsMap();</b>
+<b class="nc"><i>335</i>&nbsp;        Map&lt;Config.Resource, Long&gt; road = Structure.ROAD.getCostsAsMap();</b>
+<b class="nc"><i>336</i>&nbsp;        Map&lt;Config.Resource, Long&gt; city = Structure.CITY.getCostsAsMap();</b>
+<i>337</i>&nbsp;
+<i>338</i>&nbsp;        //Code duplication could be prevented with reflection (java.lang) because otherwise it expects a map but gets an Object object
+<b class="nc"><i>339</i>&nbsp;        textTerminal.println(&quot;\nSETTLEMENT&quot;);</b>
+<b class="nc"><i>340</i>&nbsp;        for (Map.Entry&lt;Config.Resource, Long&gt; entry : settlement.entrySet()) {</b>
+<b class="nc"><i>341</i>&nbsp;            textTerminal.println(entry.getKey().name() + &quot; &quot; + entry.getValue());</b>
+<b class="nc"><i>342</i>&nbsp;        }</b>
+<i>343</i>&nbsp;
+<b class="nc"><i>344</i>&nbsp;        textTerminal.println(&quot;\nROAD&quot;);</b>
+<b class="nc"><i>345</i>&nbsp;        for (Map.Entry&lt;Config.Resource, Long&gt; entry : road.entrySet()) {</b>
+<b class="nc"><i>346</i>&nbsp;            textTerminal.println(entry.getKey().name() + &quot; &quot; + entry.getValue());</b>
+<b class="nc"><i>347</i>&nbsp;        }</b>
+<i>348</i>&nbsp;
+<b class="nc"><i>349</i>&nbsp;        textTerminal.println(&quot;\nCITY&quot;);</b>
+<b class="nc"><i>350</i>&nbsp;        for (Map.Entry&lt;Config.Resource, Long&gt; entry : city.entrySet()) {</b>
+<b class="nc"><i>351</i>&nbsp;            textTerminal.println(entry.getKey().name() + &quot; &quot; + entry.getValue());</b>
+<b class="nc"><i>352</i>&nbsp;        }</b>
+<b class="nc"><i>353</i>&nbsp;        textTerminal.println(&quot;\n&quot;);</b>
+<b class="nc"><i>354</i>&nbsp;    }</b>
+<i>355</i>&nbsp;
+<i>356</i>&nbsp;    /**
+<i>357</i>&nbsp;     * This method throws a configurable number of dice and returns their combined value.
+<i>358</i>&nbsp;     *
+<i>359</i>&nbsp;     * @return int with sum of all dice
+<i>360</i>&nbsp;     */
+<i>361</i>&nbsp;    private int generateDiceThrow() {
+<b class="nc"><i>362</i>&nbsp;        int numberOfDice = 2;</b>
+<b class="nc"><i>363</i>&nbsp;        int[] dieResult = new int[numberOfDice];</b>
+<b class="nc"><i>364</i>&nbsp;        for (int i = 0; i &lt; numberOfDice; i++) {</b>
+<b class="nc"><i>365</i>&nbsp;            dieResult[i] = new Random().nextInt(6) + 1;</b>
+<i>366</i>&nbsp;        }
+<b class="nc"><i>367</i>&nbsp;        return IntStream.of(dieResult).sum();</b>
+<i>368</i>&nbsp;    }
+<i>369</i>&nbsp;
+<i>370</i>&nbsp;    /**
+<i>371</i>&nbsp;     * This Method takes the input of the user. It gets used in the switch cases to handle the Enums.
+<i>372</i>&nbsp;     *
+<i>373</i>&nbsp;     * @param textIO object
+<i>374</i>&nbsp;     * @param name   of the action
+<i>375</i>&nbsp;     * @param &lt;T&gt;    object type
+<i>376</i>&nbsp;     * @return Enum Value
+<i>377</i>&nbsp;     */
+<i>378</i>&nbsp;    private static &lt;T extends Enum&lt;T&gt;&gt; T getEnumValue(TextIO textIO, Class&lt;T&gt; name) {
+<b class="nc"><i>379</i>&nbsp;        return textIO.newEnumInputReader(name).read(&quot;Choose action:&quot;);</b>
+<i>380</i>&nbsp;    }
+<i>381</i>&nbsp;
+<i>382</i>&nbsp;    /**
+<i>383</i>&nbsp;     * This method handles the user input for placing the bandit
+<i>384</i>&nbsp;     */
+<i>385</i>&nbsp;    private void proceedWithBandit() {
+<b class="nc"><i>386</i>&nbsp;        textTerminal.println(&quot;Oh no, all players have been robbed!&quot;);</b>
+<b class="nc"><i>387</i>&nbsp;        textTerminal.println(&quot;Where should the thief go to?&quot;);</b>
+<i>388</i>&nbsp;
+<b class="nc"><i>389</i>&nbsp;        boolean validInput = false;</b>
+<b class="nc"><i>390</i>&nbsp;        while (!validInput) {</b>
+<b class="nc"><i>391</i>&nbsp;            textTerminal.println(&quot;\nX-Coordinate:&quot;);</b>
+<b class="nc"><i>392</i>&nbsp;            int xCoord = intInputReader.read();</b>
+<i>393</i>&nbsp;
+<b class="nc"><i>394</i>&nbsp;            textTerminal.println(&quot;\nY-Coordinate&quot;);</b>
+<b class="nc"><i>395</i>&nbsp;            int yCoord = intInputReader.read();</b>
+<i>396</i>&nbsp;
+<b class="nc"><i>397</i>&nbsp;            validInput = siedlerGame.placeThiefAndStealCard(new Point(xCoord, yCoord));</b>
+<i>398</i>&nbsp;
+<b class="nc"><i>399</i>&nbsp;            if (!validInput) {</b>
+<b class="nc"><i>400</i>&nbsp;                textTerminal.println(&quot;Invalid parameters! Action aborted - try again&quot;);</b>
+<i>401</i>&nbsp;            } else {
+<b class="nc"><i>402</i>&nbsp;                textTerminal.println(&quot;Thief successfully placed! Resource card has been stolen.&quot;);</b>
+<i>403</i>&nbsp;            }
+<b class="nc"><i>404</i>&nbsp;        }</b>
+<i>405</i>&nbsp;
+<b class="nc"><i>406</i>&nbsp;    }</b>
+<i>407</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-04 14:51</div>
+</div>
+</body>
+</html>

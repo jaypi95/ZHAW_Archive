@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>ch.zhaw.pm2.racetrack</OriginalElement>
+  <nodes>
+    <node x="847.0" y="5151.0">ch.zhaw.pm2.racetrack.PositionVectorTest</node>
+    <node x="1553.0" y="590.5">ch.zhaw.pm2.racetrack.game.logic.PositionVector</node>
+    <node x="485.0" y="-39.5">ch.zhaw.pm2.racetrack.game.MainGamePhase</node>
+    <node x="868.0" y="4370.5">ch.zhaw.pm2.racetrack.game.logic.Car</node>
+    <node x="868.5" y="2400.5">ch.zhaw.pm2.racetrack.game.logic.Game</node>
+    <node x="2245.5" y="1006.0">ch.zhaw.pm2.racetrack.game.strategy.MoveStrategy</node>
+    <node x="867.5" y="3645.5">ch.zhaw.pm2.racetrack.game.logic.Config.SpaceType</node>
+    <node x="889.5" y="7230.5">ch.zhaw.pm2.racetrack.game.logic.Config</node>
+    <node x="1524.5" y="1286.0">ch.zhaw.pm2.racetrack.game.strategy.DoNotMoveStrategy</node>
+    <node x="-11.0" y="130.5">ch.zhaw.pm2.racetrack.game.strategy.Dijkstra.Node</node>
+    <node x="1164.5" y="1622.0">ch.zhaw.pm2.racetrack.exceptions.QuitGameException</node>
+    <node x="1845.5" y="1406.0">ch.zhaw.pm2.racetrack.game.strategy.Strategy</node>
+    <node x="2199.0" y="1285.5">ch.zhaw.pm2.racetrack.game.strategy.MoveListStrategy</node>
+    <node x="1805.0" y="1590.5">ch.zhaw.pm2.racetrack.game.strategy.UserMoveStrategy</node>
+    <node x="1818.5" y="1135.5">ch.zhaw.pm2.racetrack.game.strategy.PathFinderMoveStrategy</node>
+    <node x="809.0" y="5340.5">ch.zhaw.pm2.racetrack.game.SetupPhase</node>
+    <node x="817.5" y="5715.5">ch.zhaw.pm2.racetrack.game.logic.Config.StrategyType</node>
+    <node x="774.0" y="825.5">ch.zhaw.pm2.racetrack.game.strategy.PathFollowerMoveStrategy</node>
+    <node x="834.5" y="1502.0">ch.zhaw.pm2.racetrack.exceptions.InvalidTrackFormatException</node>
+    <node x="804.5" y="6040.5">ch.zhaw.pm2.racetrack.GameTest</node>
+    <node x="848.0" y="4006.0">ch.zhaw.pm2.racetrack.game.strategy.Dijkstra.Dijkstra</node>
+    <node x="855.0" y="2846.0">ch.zhaw.pm2.racetrack.RaceTrack</node>
+    <node x="874.0" y="160.5">ch.zhaw.pm2.racetrack.game.logic.PositionVector.Direction</node>
+    <node x="882.5" y="1606.0">java.lang.Exception</node>
+    <node x="878.5" y="1720.5">ch.zhaw.pm2.racetrack.game.logic.Track</node>
+    <node x="517.0" y="176.0">java.lang.Object</node>
+    <node x="440.5" y="7470.5">ch.zhaw.pm2.racetrack.CarTest</node>
+    <node x="853.5" y="2975.5">ch.zhaw.pm2.racetrack.game.TextInteraction</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.Strategy" target="java.lang.Object">
+      <point x="-114.5" y="-0.0" />
+      <point x="715.0" y="1440.0" />
+      <point x="75.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.logic.Config.SpaceType" target="java.lang.Object">
+      <point x="-132.5" y="-0.0" />
+      <point x="680.0" y="3800.0" />
+      <point x="40.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.PositionVectorTest" target="java.lang.Object">
+      <point x="-153.0" y="-0.0" />
+      <point x="665.0" y="5200.0" />
+      <point x="25.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.PathFinderMoveStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.Strategy">
+      <point x="0.0" y="64.5" />
+      <point x="0.0" y="-34.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.RaceTrack" target="java.lang.Object">
+      <point x="-105.0" y="-0.0" />
+      <point x="690.0" y="2880.0" />
+      <point x="50.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.UserMoveStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.MoveStrategy">
+      <point x="155.0" y="-0.0" />
+      <point x="2600.0" y="1640.0" />
+      <point x="2600.0" y="1040.0" />
+      <point x="114.5" y="-0.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.logic.PositionVector" target="java.lang.Object">
+      <point x="-247.0" y="-0.0" />
+      <point x="720.0" y="760.0" />
+      <point x="80.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.PathFinderMoveStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.MoveStrategy">
+      <point x="0.0" y="-64.5" />
+      <point x="1960.0" y="1066.666666666667" />
+      <point x="-114.5" y="26.66666666666697" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.logic.Config" target="java.lang.Object">
+      <point x="-150.5" y="-0.0" />
+      <point x="645.0" y="7400.0" />
+      <point x="5.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.SetupPhase" target="java.lang.Object">
+      <point x="-191.0" y="-0.0" />
+      <point x="660.0" y="5480.0" />
+      <point x="20.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.DoNotMoveStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.Strategy">
+      <point x="115.5" y="-0.0" />
+      <point x="1920.0" y="1320.0" />
+      <point x="-40.0" y="-34.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.PathFollowerMoveStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.Strategy">
+      <point x="0.0" y="214.5" />
+      <point x="1120.0" y="1413.333333333333" />
+      <point x="-114.5" y="-26.66666666666697" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.Dijkstra.Dijkstra" target="java.lang.Object">
+      <point x="-272.0" y="-0.0" />
+      <point x="675.0" y="4160.0" />
+      <point x="35.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.UserMoveStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.Strategy">
+      <point x="0.0" y="-49.5" />
+      <point x="0.0" y="34.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.exceptions.QuitGameException" target="java.lang.Exception">
+      <point x="-115.5" y="-0.0" />
+      <point x="117.5" y="-0.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.GameTest" target="java.lang.Object">
+      <point x="-195.5" y="-0.0" />
+      <point x="650.0" y="6600.0" />
+      <point x="10.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.logic.Config.StrategyType" target="java.lang.Object">
+      <point x="-142.5" y="-0.0" />
+      <point x="655.0" y="5840.0" />
+      <point x="15.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.logic.Car" target="java.lang.Object">
+      <point x="-172.0" y="-0.0" />
+      <point x="670.0" y="4720.0" />
+      <point x="30.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.MainGamePhase" target="java.lang.Object">
+      <point x="0.0" y="79.5" />
+      <point x="0.0" y="-184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.CarTest" target="java.lang.Object">
+      <point x="0.0" y="-409.5" />
+      <point x="0.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.TextInteraction" target="java.lang.Object">
+      <point x="-266.5" y="-0.0" />
+      <point x="685.0" y="3280.0" />
+      <point x="45.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.MoveListStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.MoveStrategy">
+      <point x="0.0" y="-154.5" />
+      <point x="0.0" y="34.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.logic.Game" target="java.lang.Object">
+      <point x="-291.5" y="-0.0" />
+      <point x="695.0" y="2600.0" />
+      <point x="55.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.MoveListStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.Strategy">
+      <point x="-161.0" y="-0.0" />
+      <point x="114.5" y="-0.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.DoNotMoveStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.MoveStrategy">
+      <point x="0.0" y="-34.0" />
+      <point x="1640.0" y="1053.333333333333" />
+      <point x="-114.5" y="13.33333333333303" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.Dijkstra.Node" target="java.lang.Object">
+      <point x="211.0" y="-0.0" />
+      <point x="-123.0" y="-0.0" />
+    </edge>
+    <edge source="java.lang.Exception" target="java.lang.Object">
+      <point x="-117.5" y="-0.0" />
+      <point x="710.0" y="1640.0" />
+      <point x="70.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.strategy.PathFollowerMoveStrategy" target="ch.zhaw.pm2.racetrack.game.strategy.MoveStrategy">
+      <point x="346.0" y="-0.0" />
+      <point x="-114.5" y="-0.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.logic.Track" target="java.lang.Object">
+      <point x="-201.5" y="-0.0" />
+      <point x="700.0" y="2040.0" />
+      <point x="60.0" y="184.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.exceptions.InvalidTrackFormatException" target="java.lang.Exception">
+      <point x="0.0" y="18.0" />
+      <point x="0.0" y="-34.0" />
+    </edge>
+    <edge source="ch.zhaw.pm2.racetrack.game.logic.PositionVector.Direction" target="java.lang.Object">
+      <point x="-126.0" y="-0.0" />
+      <point x="123.0" y="-0.0" />
+    </edge>
+  </edges>
+  <settings layout="Directed Orthogonal" zoom="0.09664670658682635" x="1294.5" y="4125.0" />
+  <SelectedNodes>
+    <node>ch.zhaw.pm2.racetrack.PositionVectorTest</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

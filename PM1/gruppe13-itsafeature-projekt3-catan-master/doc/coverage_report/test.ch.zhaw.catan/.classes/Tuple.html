@@ -1,0 +1,125 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Tuple</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">test.ch.zhaw.catan</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Tuple (test.ch.zhaw.catan)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Tuple</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (4/ 16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package test.ch.zhaw.catan;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;public class Tuple&lt;X, Y&gt; {
+<i>4</i>&nbsp;  public final X first;
+<i>5</i>&nbsp;  public final Y second;
+<i>6</i>&nbsp;
+<b class="fc"><i>7</i>&nbsp;  public Tuple(X x, Y y) {</b>
+<b class="fc"><i>8</i>&nbsp;    this.first = x;</b>
+<b class="fc"><i>9</i>&nbsp;    this.second = y;</b>
+<b class="fc"><i>10</i>&nbsp;  }</b>
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;  @Override
+<i>13</i>&nbsp;  public String toString() {
+<b class="nc"><i>14</i>&nbsp;    return &quot;(&quot; + first + &quot;,&quot; + second + &quot;)&quot;;</b>
+<i>15</i>&nbsp;  }
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;  @Override
+<i>18</i>&nbsp;  public boolean equals(Object other) {
+<b class="nc"><i>19</i>&nbsp;    if (other == this) {</b>
+<b class="nc"><i>20</i>&nbsp;      return true;</b>
+<i>21</i>&nbsp;    }
+<i>22</i>&nbsp;
+<b class="nc"><i>23</i>&nbsp;    if (!(other instanceof Tuple)) {</b>
+<b class="nc"><i>24</i>&nbsp;      return false;</b>
+<i>25</i>&nbsp;    }
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    @SuppressWarnings(&quot;unchecked&quot;)
+<b class="nc"><i>28</i>&nbsp;    Tuple&lt;X, Y&gt; otherCasted = (Tuple&lt;X, Y&gt;) other;</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    // null is not a valid value for first and second tuple element
+<b class="nc"><i>31</i>&nbsp;    return otherCasted.first.equals(this.first) &amp;&amp; otherCasted.second.equals(this.second);</b>
+<i>32</i>&nbsp;  }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;  @Override
+<i>35</i>&nbsp;  public int hashCode() {
+<b class="nc"><i>36</i>&nbsp;    final int prime = 31;</b>
+<b class="nc"><i>37</i>&nbsp;    int result = 1;</b>
+<b class="nc"><i>38</i>&nbsp;    result = prime * result + ((first == null) ? 0 : first.hashCode());</b>
+<b class="nc"><i>39</i>&nbsp;    result = prime * result + ((second == null) ? 0 : second.hashCode());</b>
+<b class="nc"><i>40</i>&nbsp;    return result;</b>
+<i>41</i>&nbsp;  }
+<i>42</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-04 14:51</div>
+</div>
+</body>
+</html>

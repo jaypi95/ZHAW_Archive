@@ -1,0 +1,70 @@
+# InelliJ IDEA files
+*.iml
+*.ipr
+*.ids
+*.iws
+.idea/
+
+# Eclipse files
+.project
+.metadata
+.classpath
+.settings/
+.loadpath
+bin/
+
+# Netbeans
+nbactions.xml
+
+# Visual Studio Code
+.vscode
+
+# Maven
+target/
+
+# gradle files
+.gradle
+build/
+
+# ignore logfiles
+*.log*
+
+# OS dependant files
+.DS_Store
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Desktop.ini
+*~
+# Thumbnails
+._*
+
+# compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# packages
+*.7z
+#*.jar
+*.rar
+*.zip
+*.gz
+*.bzip
+*.xz
+*.lzma
+*~$*
+
+# package managment formats
+*.dmg
+*.xpi
+*.gem
+*.egg
+*.deb
+*.rpm
+
+# databases
+*.sqlite

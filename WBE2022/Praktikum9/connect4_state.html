@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vier gewinnt</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <style>
+
+    </style>
+
+    <script>
+        let state = {
+            board: [
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '']
+            ],
+            currentPlayer: ""
+        }
+        let boardVM
+
+
+        function init() {
+            state.currentPlayer = 'red'
+            boardVM = document.querySelector(".board")
+            for (let i = 0; i < state.board.length; i++) {
+                for (let j = 0; j < state.board[i].length; j++) {
+                    boardVM.appendChild(
+                        elt(
+                            "div",
+                            { "class": "field" }
+                        ))
+                }
+            }
+            addClickListenerToFields()
+            addClickListenerToResetButton()
+        }
+
+        function addClickListenerToFields() {
+            document.querySelectorAll("div.field").forEach(field => {
+                field.addEventListener('click', () => {
+                    setPuck(field)
+                })
+            })
+        }
+
+        function addClickListenerToResetButton() {
+            document.querySelector(".button-reset").addEventListener('click', () => {
+                resetGame()
+            })
+        }
+
+        function resetGame() {
+            for (let i = 0; i < state.board.length; i++) {
+                for (let j = 0; j < state.board[i].length; j++) {
+                    state.board[i][j] = ''
+                }
+            }
+
+            document.querySelectorAll("div.field").forEach(field => {
+                while (field.firstChild) {
+                    field.removeChild(field.lastChild);
+                }
+            })
+
+            state.currentPlayer = 'red'
+        }
+
+        function setPuck(field) {
+            console.log("field.childNodes.length ",field.childNodes.length)
+            if (field.childNodes.length === 0) {
+                let index = Array.prototype.indexOf.call(boardVM.children, field)
+                const columnIndex = index % 7
+                //rundet immer ab (z.B 6.94 -> 6)
+                const rowIndex = (index / 7) | 0
+                if (state.currentPlayer === 'blue') {
+                    setPuckOnLowestLevel('blue', columnIndex, rowIndex)
+                }
+                else {
+                    setPuckOnLowestLevel('red', columnIndex, rowIndex)
+                }
+            }
+        }
+
+        function setPuckOnLowestLevel(currentPlayer, columnIndex, rowIndex) {
+            let discPlaced = false
+            for (let i = state.board.length - 1; i >= 0; i--) {
+                if (!discPlaced && state.board[i][columnIndex] === '') {
+                    let index = columnIndex + (7 * i)
+                    let lowestFreeField = document.querySelectorAll("div.field")[index]
+                    lowestFreeField.appendChild(
+                        elt(
+                            "div",
+                            { "class": "piece " + currentPlayer }))
+                    state.board[i][columnIndex] = currentPlayer === 'red' ? 'r' : 'b'
+                    discPlaced = true
+                }
+            }
+            changePlayer()
+        }
+
+        function changePlayer() {
+            if (state.currentPlayer === 'red') {
+                state.currentPlayer = 'blue'
+            } else {
+                state.currentPlayer = 'red'
+            }
+        }
+
+        function elt(type, attrs, ...children) {
+            let node = document.createElement(type)
+            for (a in attrs) {
+                node.setAttribute(a, attrs[a])
+            }
+            for (let child of children) {
+                if (typeof child != "undefined") {
+                    if (typeof child != "string") node.appendChild(child)
+                    else node.appendChild(document.createTextNode(child))
+                }
+            }
+            return node
+        }
+    </script>
+
+</head>
+
+<body>
+
+
+<div class="board"></div>
+<button class="button-reset" role="button">Reset</button>
+<script>
+    init()
+</script>
+</body>
+
+</html>
